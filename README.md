@@ -8,7 +8,7 @@
     </p>
 </div>
 
-![Preview](public/preview.png)
+![Preview](public/previews.png)
 
 # Página Web
 

@@ -6,6 +6,7 @@ import { ScientificArticle } from "../modules/scientific-article/pages/Scientifi
 import { Contact } from "../modules/contact/pages/Contact";
 import { ResearchProjectDetail } from "../modules/Project/pages/ResearchProjectDetail";
 import { TeacherDetail } from "../modules/Teacher/pages/TeacherDetail";
+import { ScientificArticleDetail } from "../modules/scientific-article/pages/ScientificArticleDetail";
 
 const appRouter = [
   {
@@ -26,7 +27,7 @@ const appRouter = [
       },
       {
         path: "/scientific-article/:id",
-        element: <ResearchProjectDetail />,
+        element: <ScientificArticleDetail />,
       },
       {
         path: "/research-project",

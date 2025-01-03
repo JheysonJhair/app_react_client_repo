@@ -1,10 +1,16 @@
-export interface Teacher {
+export interface TeacherDto {
     IdTeacher?: number;
     FirstName: string;
     LastName: string;
+    Gender:boolean;
+    Position: string;
+    Image?: string;
+    Facebook?:string;
+    Linkedin?:string;
+    RegistrationCode:string;
+    Mail?: string;
     Phone?: string;
     Description: string;
-    Mail?: string;
     BirthDate?: string;
     WorkExperiences: WorkExperience[]; 
     TeachingExperiences: ExperienceTeacher[]; 

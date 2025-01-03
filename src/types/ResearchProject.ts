@@ -1,4 +1,4 @@
-export interface ResearchProject {
+export interface ResearchProjectDto {
   IdResearchProject: number;
   Name: string;
   Description: string;

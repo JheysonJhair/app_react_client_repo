@@ -1,9 +1,9 @@
-export interface ScientificArticle {
+export interface ScientificArticleDto {
   IdScientificArticle: number;
   Name: string;
   Description: string;
   Summary: string;
-  Date: number;
+  Date: string;
   Doi: string;
   Authors: string;
   Pdf: string;

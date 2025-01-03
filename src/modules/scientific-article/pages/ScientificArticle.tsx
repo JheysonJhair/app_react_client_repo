@@ -5,10 +5,6 @@ import { getScientificArticle } from "../../../services/ScientificArticle";
 import { ScientificArticleDto } from "../../../types/ScientificArticle";
 
 export const ScientificArticle = () => {
-  useEffect(() => {
-    document.title = "Artículos científicos";
-  }, []);
-
   const [article, setArticles] = useState<ScientificArticleDto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -64,7 +60,7 @@ export const ScientificArticle = () => {
 
           <div className="w-full flex flex-row mt-4">
             {loading ? (
-              <div className="text-center">Cargando articulos...</div>
+              <div className="w-3/4 text-center">Cargando articulos...</div>
             ) : (
               <section className="w-3/4">
                 {article.map((article) => (

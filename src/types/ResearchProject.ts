@@ -3,7 +3,7 @@ export interface ResearchProjectDto {
   Name: string;
   Description: string;
   Summary: string;
-  Date: number;
+  Date: string;
   Doi: string;
   Authors: string;
   Pdf: string;

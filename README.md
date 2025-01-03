@@ -1,8 +1,8 @@
 <div align="center">
-    <a href="https://github.com/JheysonJhair/app_react_client_yogurth-mafer">
+    <a href="https://github.com/JheysonJhair/app_react_client_repo">
       <img src="public/Logo.png" width="108px" />
     </a>
-    <h1>JhairDev - Yogurth Mafer</h1>
+    <h1>JhairDev - Unamba Repositorio</h1>
     <p align="center">
         Full Stack Developer Jhair
     </p>
@@ -10,10 +10,9 @@
 
 ![Preview](public/preview.png)
 
-# Sistema de Venta de Yogurth
+# Página Web
 
-Bienvenido al **Sistema de Venta de Yogur Maffer**, una aplicación frontend desarrollada para la venta en línea de productos de yogur. Este sistema permite a los usuarios adquirir productos de manera sencilla y segura, integrando pasarelas de pago como **Izipay** y permitiendo la aceptación de pagos a través de **Yape**.
-
+Bienvenido al **Repositorio Académico UNAMBA**, una plataforma diseñada para docentes de la Universidad Nacional Micaela Bastidas de Apurímac. Este sistema permite a los docentes publicar artículos científicos y proyectos académicos, promoviendo el intercambio de conocimiento y la difusión de investigaciones relevantes.
 ## Tecnologías Utilizadas
 
 - **React**: Biblioteca principal utilizada para desarrollar la interfaz de usuario.
@@ -23,33 +22,15 @@ Bienvenido al **Sistema de Venta de Yogur Maffer**, una aplicación frontend des
 
 ---
 
-## Módulos del Sistema
-
-La aplicación cuenta con los siguientes módulos:
-
-- **Módulo de Productos**: Gestión y administración de los productos de yogur disponibles para la venta.
-
-- **Módulo de Venta**: Facilita la compra de productos de yogur mediante métodos de pago seguros e integrados, como **Izipay** y **Yape**.
-- **Módulo de Reportes**: Genera informes sobre las ventas, productos más vendidos y estadísticas generales.
-- **Módulo de Usuarios**: Administración de la información de los clientes registrados.
-- **Módulo de Autenticación**: Permite la autenticación de usuarios para realizar compras de forma segura.
-
----
-
 ## Instalación
 
 1. **Requisitos previos**:
    - Tener instalado **Node.js** y **npm** en tu sistema.
-   - Back-end:
-
-    ```bash
-    git clone https://github.com/Edsghot/yogurth-mafer
-
 
 2. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/JheysonJhair/app_react_client_yogurth-mafer.git
-   cd app_react_client_yogurth-mafer
+   git clone https://github.com/JheysonJhair/app_react_client_repo
+   cd app_react_client_repo
 
 3. **Instala las dependencias con `npm install`.**
 
@@ -65,6 +46,6 @@ La aplicación cuenta con los siguientes módulos:
 
 4. **Abre tu navegador y visita `http://localhost:5173`.**
 
-¡Listo! Ahora puedes comenzar a trabajar en el Sistema sin problemas.
+¡Listo! Ahora puedes comenzar a trabajar en la web sin problemas.
 
 

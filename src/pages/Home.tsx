@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { Hero } from "./components/Hero";
 import { TeacherDto } from "../types/Teacher";
 import { getTeacher } from "../services/Teacher";
@@ -7,7 +7,7 @@ import { getTeacher } from "../services/Teacher";
 export const Home: React.FC = () => {
   const [docentes, setDocentes] = useState<TeacherDto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   //---------------------------------------------------------------- GET TEACHERS
   useEffect(() => {
@@ -50,7 +50,7 @@ export const Home: React.FC = () => {
               {docentes.map((docente) => (
                 <div
                   key={docente.IdTeacher}
-                  className="max-w-xs mx-auto rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover:scale-105 cursor-pointer" 
+                  className="max-w-xs mx-auto rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover:scale-105 cursor-pointer"
                   style={{ height: "350px" }}
                   onClick={() => handleCardClick(docente)}
                 >

@@ -5,7 +5,8 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { pathname } = location;
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string, title: string) => {
+    document.title = title; 
     navigate(path);
   };
 
@@ -18,7 +19,7 @@ export const Navbar = () => {
         to={"/"}
         onClick={(e) => {
           e.preventDefault();
-          handleNavigation("/");
+          handleNavigation("/","Repositorio Académico");
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
@@ -26,33 +27,40 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`${
-          pathname === "/scientific-article"
+          pathname.startsWith("/scientific-article")
             ? "text-primary font-semibold"
             : "text-black"
         } hover:text-primary transition`}
-        to={"/scientific-article"}
+        to="/scientific-article"
         onClick={(e) => {
           e.preventDefault();
-          handleNavigation("/scientific-article");
+          handleNavigation(
+            "/scientific-article",
+            "Artículos Científicos"
+          );
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
         Artículos Científicos
       </Link>
+
       <Link
         className={`${
-          pathname === "/research-project"
+          pathname.startsWith("/research-project")
             ? "text-primary font-semibold"
             : "text-black"
         } hover:text-primary transition`}
         to={"/research-project"}
         onClick={(e) => {
           e.preventDefault();
-          handleNavigation("/research-project");
+          handleNavigation(
+            "/research-project",
+            "Proyectos de Investigación"
+          );
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
-        Proyectos de Investigacion
+        Proyectos de Investigación
       </Link>
       <Link
         className={`${
@@ -61,7 +69,10 @@ export const Navbar = () => {
         to={"/contact"}
         onClick={(e) => {
           e.preventDefault();
-          handleNavigation("/contact");
+          handleNavigation(
+            "/contact",
+            "Soporte"
+          );
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >

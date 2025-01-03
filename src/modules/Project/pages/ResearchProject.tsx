@@ -1,10 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AiFillBook, AiFillFilePdf, AiOutlineSearch } from "react-icons/ai";
-
+import { useNavigate } from "react-router-dom";
+import { ResearchProjectDto } from "../../../types/ResearchProject";
+import { getResearchProject } from "../../../services/ResearchProject";
 export const ResearchProject = () => {
+
+  const [project, setProject] = useState<ResearchProjectDto[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  //---------------------------------------------------------------- GET TEACHERS
   useEffect(() => {
-    document.title = "Proyectos de investigacion";
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const projects = await getResearchProject();
+        setProject(projects);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      }
+    };
+    loadProducts();
   }, []);
+
+  const handleCardClick = (project: ResearchProjectDto) => {
+    navigate(`/research-project/${project.IdResearchProject}`, {
+      state: project,
+    });
+  };
 
   return (
     <section className="mt-[120px] sm:mt-10 max-w-[1350px] mx-auto py-16">
@@ -14,7 +38,7 @@ export const ResearchProject = () => {
             <div className="w-full flex items-center space-x-3">
               <AiFillBook size={32} className="text-primary_light" />
               <h1 className="text-3xl font-bold text-primary_light">
-                Proyectos De Investigacion
+                Artículos Científicos
               </h1>
             </div>
 
@@ -35,49 +59,52 @@ export const ResearchProject = () => {
           </div>
 
           <div className="w-full flex flex-row mt-4">
-            <section className="w-3/4">
-              {[1, 2].map((_, index) => (
-                <article
-                  key={index}
-                  className="bg-white shadow-md rounded-lg p-4 mb-4"
-                >
-                  <a
-                    href="#"
-                    className="text-blue-600 text-lg font-bold hover:underline"
+            {loading ? (
+              <div className="w-3/4 text-center">Cargando proyectos...</div>
+            ) : (
+              <section className="w-3/4">
+                {project.map((project) => (
+                  <article
+                    key={project.IdResearchProject}
+                    className="bg-white shadow-md rounded-lg p-4 mb-4"
                   >
-                    Correlatos neurales de la despersonalización-desrealización
-                  </a>
-                  <p className="text-gray-400 text-sm">Año 2024 (xxxxxx)</p>
-                  <p className="text-gray-900 text-sm">
-                    Doi:{" "}
                     <a
-                      href="#"
-                      className="text-secondary_light hover:underline"
+                      className="text-blue-600 text-lg font-bold hover:underline cursor-pointer"
+                      onClick={() => handleCardClick(project)}
                     >
-                      https://hdl.handle.net/20.500.12724/21796
+                      {project.Name}
                     </a>
-                  </p>
-                  <p className="text-gray-900 text-sm">
-                    <p>
-                      Autores:{" "}
-                      <span className="text-secondary_light">
-                        Palomino Torres, Ana Lucía; Pezan Dedios, María
-                        Victoria; Risco Nuñez Encinas
-                      </span>
+                    <p className="text-gray-400 text-sm">Año {project.Date}</p>
+                    <p className="text-gray-900 text-sm">
+                      Doi:{" "}
+                      <a
+                        href="#"
+                        className="text-secondary_light hover:underline"
+                      >
+                        {project.Doi}
+                      </a>
                     </p>
-                  </p>
-                  <p className="text-gray-700 mt-2">
-                    El síndrome de la despersonalización (DPD) y desrealización
-                    (DR) es altamente prevalente a nivel global, así es el
-                    segundo síndrome más común después de la ansiedad y la
-                    depresión. Estudios demuestran una prevalencia del ...
-                  </p>
-                  <button className="flex items-center mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
-                    <AiFillFilePdf size={20} className="mr-2" /> PDF
-                  </button>
-                </article>
-              ))}
-            </section>
+                    <p className="text-gray-900 text-sm">
+                      <p>
+                        Autores:{" "}
+                        <span className="text-secondary_light">
+                          {project.Authors}
+                        </span>
+                      </p>
+                    </p>
+                    <p className="text-gray-700 mt-2">{project.Description}</p>
+                    <a
+                      href={project.Pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-auto max-w-24 flex items-center mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600"
+                    >
+                      <AiFillFilePdf size={20} className="mr-2" /> PDF
+                    </a>
+                  </article>
+                ))}
+              </section>
+            )}
             <aside className="w-1/4 h-[250px] bg-[#F8F8F8] p-4 rounded-lg ml-4">
               <h3 className="text-lg font-bold text-gray-700 mb-2">
                 Listar a nivel:
@@ -96,7 +123,7 @@ export const ResearchProject = () => {
               </ul>
             </aside>
           </div>
-        </div>{" "}
+        </div>
       </div>
     </section>
   );

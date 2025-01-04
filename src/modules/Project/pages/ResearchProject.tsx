@@ -38,7 +38,7 @@ export const ResearchProject = () => {
             <div className="w-full flex items-center space-x-3">
               <AiFillBook size={32} className="text-primary_light" />
               <h1 className="text-3xl font-bold text-primary_light">
-                Artículos Científicos
+                Proyectos de investigacion
               </h1>
             </div>
 
@@ -106,21 +106,7 @@ export const ResearchProject = () => {
               </section>
             )}
             <aside className="w-1/4 h-[250px] bg-[#F8F8F8] p-4 rounded-lg ml-4">
-              <h3 className="text-lg font-bold text-gray-700 mb-2">
-                Listar a nivel:
-              </h3>
-              <ul className="space-y-2">
-                {["Revistas", "Procidis", "Patentes", "Conferencia"].map(
-                  (item) => (
-                    <li
-                      key={item}
-                      className="text-gray-700 hover:text-blue-500 cursor-pointer"
-                    >
-                      {item}
-                    </li>
-                  )
-                )}
-              </ul>
+ 
             </aside>
           </div>
         </div>

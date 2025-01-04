@@ -16,8 +16,7 @@ export const ScientificArticleDetail: React.FC = () => {
   return (
     <section className="mt-[130px] sm:mt-12 max-w-[1000px] mx-auto py-16">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Efectos de la ceniza de cascara de arroz sobre las propiedades mecánicas
-        y durabilidad de un concreto convencional, Lambayeque-2024
+        {article.Name}
       </h1>
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-6">

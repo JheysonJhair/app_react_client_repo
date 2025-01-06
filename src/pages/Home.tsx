@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
   }, []);
 
   const handleCardClick = (docente: TeacherDto) => {
-    navigate(`/teacher/${docente.IdTeacher}`, { state: docente });
+    navigate(`/teacher/${docente.idTeacher}`, { state: docente });
   };
 
   return (
@@ -49,22 +49,22 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
               {docentes.map((docente) => (
                 <div
-                  key={docente.IdTeacher}
+                  key={docente.idTeacher}
                   className="max-w-xs mx-auto rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover:scale-105 cursor-pointer"
                   style={{ height: "350px" }}
                   onClick={() => handleCardClick(docente)}
                 >
                   <img
                     className="w-full h-48 object-cover"
-                    src={docente.Image}
-                    alt={docente.FirstName}
+                    src={docente.image}
+                    alt={docente.firstName}
                   />
                   <div className="p-4 flex flex-col justify-between">
                     <h4 className="text-lg font-bold text-ellipsis overflow-hidden whitespace-nowrap">
-                      {docente.FirstName} {docente.LastName}
+                      {docente.firstName} {docente.lastName}
                     </h4>
                     <p className="text-xl font-semibold text-gray-800">
-                      {docente.Position}
+                      {docente.position}
                     </p>
                   </div>
                 </div>

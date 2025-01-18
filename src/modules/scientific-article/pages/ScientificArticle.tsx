@@ -45,7 +45,7 @@ export const ScientificArticle = () => {
   }, [selectedLevel, searchText, articles]);
 
   const handleCardClick = (article: ScientificArticleDto) => {
-    navigate(`/scientific-article/${article.idScientificArticle}`, {
+    navigate(`/student/scientific-article/${article.idScientificArticle}`, {
       state: article,
     });
   };

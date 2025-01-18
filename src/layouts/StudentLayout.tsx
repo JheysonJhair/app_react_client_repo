@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Footer } from "../components/footer/Footer";
 import { Header } from "../components/header/Header";
 
-function AppLayout() {
+function StudentLayout() {
   return (
     <div className="overflow-hidden relative min-h-screen flex flex-col">
       <Header />
@@ -14,4 +14,4 @@ function AppLayout() {
   );
 }
 
-export default AppLayout;
+export default StudentLayout;

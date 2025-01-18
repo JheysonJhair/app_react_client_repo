@@ -26,7 +26,7 @@ export const ResearchProject = () => {
   }, []);
 
   const handleCardClick = (project: ResearchProjectDto) => {
-    navigate(`/research-project/${project.idResearchProject}`, {
+    navigate(`/student/research-project/${project.idResearchProject}`, {
       state: project,
     });
   };
@@ -76,15 +76,6 @@ export const ResearchProject = () => {
                       {project.name}
                     </a>
                     <p className="text-gray-400 text-sm"> Año {formatDate(project.date)}</p>
-                    <p className="text-gray-900 text-sm">
-                      Doi:{" "}
-                      <a
-                        href="#"
-                        className="text-secondary_light hover:underline"
-                      >
-                        {project.doi}
-                      </a>
-                    </p>
                     <p className="text-gray-900 text-sm">
                       <p>
                         Autores:{" "}

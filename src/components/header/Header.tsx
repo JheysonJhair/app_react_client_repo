@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
         } fixed w-full z-10 transition-all border-b border-gray-200`}
       >
         <div className="container mx-auto flex items-center justify-between h-full">
-          <Link to={"/"}>
+          <Link to={"/student"}>
             <div className="flex items-center gap-4">
               <img className="w-[165px]" src={Logo} alt="Logo" />
             </div>

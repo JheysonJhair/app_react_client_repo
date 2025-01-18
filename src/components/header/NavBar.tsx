@@ -14,12 +14,12 @@ export const Navbar = () => {
     <nav className="flex items-center gap-9 font-medium text-primary">
       <Link
         className={`${
-          pathname === "/" ? "text-primary font-semibold" : "text-black"
+          pathname === "/student" ? "text-primary font-semibold" : "text-black"
         } hover:text-primary transition`}
-        to={"/"}
+        to={"/student"}
         onClick={(e) => {
           e.preventDefault();
-          handleNavigation("/","Repositorio Académico");
+          handleNavigation("/student","Repositorio Académico");
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
@@ -27,15 +27,15 @@ export const Navbar = () => {
       </Link>
       <Link
         className={`${
-          pathname.startsWith("/scientific-article")
+          pathname.startsWith("/student/scientific-article")
             ? "text-primary font-semibold"
             : "text-black"
         } hover:text-primary transition`}
-        to="/scientific-article"
+        to="/student/scientific-article"
         onClick={(e) => {
           e.preventDefault();
           handleNavigation(
-            "/scientific-article",
+            "/student/scientific-article",
             "Artículos Científicos"
           );
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -46,15 +46,15 @@ export const Navbar = () => {
 
       <Link
         className={`${
-          pathname.startsWith("/research-project")
+          pathname.startsWith("/student/research-project")
             ? "text-primary font-semibold"
             : "text-black"
         } hover:text-primary transition`}
-        to={"/research-project"}
+        to={"/student/research-project"}
         onClick={(e) => {
           e.preventDefault();
           handleNavigation(
-            "/research-project",
+            "/student/research-project",
             "Proyectos de Investigación"
           );
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -66,11 +66,11 @@ export const Navbar = () => {
         className={`${
           pathname === "/contact" ? "text-primary font-semibold" : "text-black"
         } hover:text-primary transition`}
-        to={"/contact"}
+        to={"/student/contact"}
         onClick={(e) => {
           e.preventDefault();
           handleNavigation(
-            "/contact",
+            "/student/contact",
             "Soporte"
           );
           window.scrollTo({ top: 0, behavior: "smooth" });

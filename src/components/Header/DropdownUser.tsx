@@ -25,9 +25,13 @@ const DropdownUser = () => {
           <span className="block text-xs">DOCENTE</span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
-        </span>
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          <img
+            src="https://img.freepik.com/foto-gratis/cierrese-encima-retrato-cara-joven-hombre-barbudo_171337-2887.jpg?semt=ais_incoming"
+            alt="User"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         <svg
           className="hidden fill-current sm:block"
@@ -78,7 +82,10 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button onClick={handleLogout} className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+          >
             <svg
               className="fill-current"
               width="22"

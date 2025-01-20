@@ -34,7 +34,7 @@ module.exports = {
           DEFAULT: "#FB5454",
         },
         body: "#64748B",
-        bodydark: "#AEB7C0",
+        bodydark: "#ffffff",
         bodydark1: "#DEE4EE",
         bodydark2: "#8A99AF",
         primary: "#00407d",

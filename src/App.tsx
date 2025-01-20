@@ -14,8 +14,13 @@ import { Contact } from "./modules/contact/pages/Contact";
 
 import TeacherLogin from "./pages/auth/TeacherLogin";
 import HomeTeacher from "./pages/HomeTeacher";
-import TeacherProfile from "./architecture/Teacher/TeacherProfile";
+import TeacherProfile from "./architecture/Profile/TeacherProfile";
 import { TeacherLayout } from "./layouts/TeacherLayout";
+import Experience from "./architecture/Experience/Experience";
+import Projects from "./architecture/Projects/Projects";
+import Articles from "./architecture/Articles/Articles";
+import CreateArticle from "./architecture/Articles/CreateArticle";
+import CreateProject from "./architecture/Projects/CreateProject";
 
 const App = () => {
   return (
@@ -38,6 +43,11 @@ const App = () => {
           <Route element={<TeacherLayout children={undefined}/>}>
             <Route index element={<HomeTeacher />} />
             <Route path="profile" element={<TeacherProfile />} />
+            <Route path="experience" element={<Experience />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="create-project" element={<CreateProject />} />
+            <Route path="articles" element={<Articles />} />
+            <Route path="create-article" element={<CreateArticle />} />
           </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" />} />

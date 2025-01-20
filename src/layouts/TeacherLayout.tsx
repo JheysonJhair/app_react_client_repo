@@ -12,7 +12,7 @@ const TeacherLayout: React.FC<{ children: ReactNode }> = () => {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          <main>
+          <main className="mx-10 mt-8 mb-10">
              <Outlet />
           </main>
         </div>

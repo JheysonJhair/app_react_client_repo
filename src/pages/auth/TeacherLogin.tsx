@@ -111,7 +111,7 @@ const TeacherLogin = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="6+ caracteres, 1 letra mayúscula"
+                  placeholder="Ingresa su contraseña"
                   className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
 
@@ -188,7 +188,7 @@ const TeacherLogin = () => {
             <div className="mt-6 text-center">
               <p>
                 ¿No tienes ninguna cuenta?{" "}
-                <Link to="/auth/signup" className="text-primary">
+                <Link to="/teacher/verification" className="text-primary">
                   Registrarme aquí
                 </Link>
               </p>

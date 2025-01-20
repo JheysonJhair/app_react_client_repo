@@ -21,6 +21,8 @@ import Projects from "./architecture/Projects/Projects";
 import Articles from "./architecture/Articles/Articles";
 import CreateArticle from "./architecture/Articles/CreateArticle";
 import CreateProject from "./architecture/Projects/CreateProject";
+import TeacherRegister from "./pages/auth/TeacherRegister";
+import VerificationAccount from "./pages/auth/VerificationAccount";
 
 const App = () => {
   return (
@@ -38,6 +40,8 @@ const App = () => {
       </Route>
 
       <Route path="/teacher/login" element={<TeacherLogin />} />
+      <Route path="/teacher/verification" element={<VerificationAccount />} />
+      <Route path="/teacher/register" element={<TeacherRegister />} />
 
       <Route path="/teacher" element={<ProtectedRoute />}>
           <Route element={<TeacherLayout children={undefined}/>}>

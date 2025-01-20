@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./hook/ProtectedRoute ";
+import ProtectedRoute from "./hook/ProtectedRoute";
 
 import Home from "./pages/Home";
 import StudentLayout from "./layouts/StudentLayout";
@@ -11,10 +11,11 @@ import { ResearchProject } from "./modules/Project/pages/ResearchProject";
 import { ResearchProjectDetail } from "./modules/Project/pages/ResearchProjectDetail";
 import { Contact } from "./modules/contact/pages/Contact";
 
-import TeacherLayout from "./layouts/TeacherLayout";
+
 import TeacherLogin from "./pages/auth/TeacherLogin";
 import HomeTeacher from "./pages/HomeTeacher";
 import TeacherProfile from "./architecture/Teacher/TeacherProfile";
+import { TeacherLayout } from "./layouts/TeacherLayout";
 
 const App = () => {
   return (
@@ -34,7 +35,7 @@ const App = () => {
       <Route path="/teacher/login" element={<TeacherLogin />} />
 
       <Route path="/teacher" element={<ProtectedRoute />}>
-          <Route element={<TeacherLayout />}>
+          <Route element={<TeacherLayout children={undefined}/>}>
             <Route index element={<HomeTeacher />} />
             <Route path="profile" element={<TeacherProfile />} />
           </Route>

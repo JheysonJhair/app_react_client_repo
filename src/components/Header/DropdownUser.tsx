@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ClickOutside from "../ClickOutside";
-import UserOne from "../../assets/images/user/user-01.png";
 
 const DropdownUser = () => {
   const navigate = useNavigate();

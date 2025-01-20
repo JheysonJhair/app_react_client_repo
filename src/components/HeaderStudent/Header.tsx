@@ -22,8 +22,8 @@ export const Header: React.FC = () => {
     <>
       <header
         className={`${
-          isActive ? "bg-[#EAF1F7] py-4 shadow-md" : "bg-[#F8F8F8] py-6"
-        } fixed w-full z-10 transition-all border-b border-gray-200`}
+          isActive ? "bg-[#EAF1F7] py-4 shadow-md" : "bg-[#F8F8F8] py-6 px-10"
+        } fixed w-full z-10 transition-all border-b border-gray-200 px-10`}
       >
         <div className="container mx-auto flex items-center justify-between h-full">
           <Link to={"/student"}>

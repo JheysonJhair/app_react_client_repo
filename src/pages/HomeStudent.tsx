@@ -33,7 +33,7 @@ export const HomeStudent = () => {
     <>
       <Hero />
       <section className="py-4 bg-[#fff]">
-        <div className="container mx-auto px-14">
+        <div className=" mx-auto px-14">
           <h3 className="mb-12 text-center text-xl text-primary">
             Aquí encontrarás una amplia colección de recursos académicos y
             científicos desarrollados por nuestra comunidad universitaria. Este

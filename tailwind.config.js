@@ -37,7 +37,7 @@ module.exports = {
         bodydark: "#AEB7C0",
         bodydark1: "#DEE4EE",
         bodydark2: "#8A99AF",
-        primary: "#3C50E0",
+        primary: "#00407d",
         secondary: "#80CAEE",
         accent: "#ECB119",
         secondary: "#001f4f",

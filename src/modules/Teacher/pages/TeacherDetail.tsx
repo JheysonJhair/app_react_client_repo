@@ -6,6 +6,7 @@ import { TeacherDto } from "../../../types/Teacher";
 export const TeacherDetail: React.FC = () => {
   const { state } = useLocation();
   const docente = state as TeacherDto;
+  console.log(docente)
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

@@ -77,7 +77,7 @@ const DropdownUser = () => {
                     fill=""
                   />
                 </svg>
-                My Perfil
+                Mi Perfil
               </Link>
             </li>
           </ul>
@@ -106,7 +106,7 @@ const DropdownUser = () => {
           </button>
         </div>
       )}
-      {/* <!-- Dropdown End --> */}
+
     </ClickOutside>
   );
 };

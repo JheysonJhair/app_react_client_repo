@@ -1,13 +1,29 @@
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import { Trash2, UserRoundPen } from "lucide-react";
+import { Edit, Trash2, UserRoundPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getTeacherById } from "../../services/Teacher";
 import Loader from "../../common/Loader";
-import { TeacherDto } from "../../types/Teacher";
+import { TeacherDto, WorkExperience } from "../../types/Teacher";
 import { FaEnvelope, FaFacebook, FaLinkedin } from "react-icons/fa";
+import Modal from "../../pages/Modal";
 
 const TeacherProfile = () => {
   const [docente, setDocente] = useState<TeacherDto | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const [laboral, setLaboral] = useState<WorkExperience | null>(null);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const closeModal3 = () => {
+    setIsModalOpen3(false);
+  };
+
+  const handleEditClickLaboral = (data: WorkExperience) => {
+    setLaboral(data);
+    setIsModalOpen3(true);
+  };
 
   useEffect(() => {
     const fetchTeacher = async () => {
@@ -30,7 +46,7 @@ const TeacherProfile = () => {
 
       <div className="flex space-x-8">
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark w-1/3">
-          <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
+          <div className="px-4 pb-6 text-center lg:pb-7 xl:pb-7">
             <div className="relative mt-4 z-30 mx-auto h-30 w-30 sm:h-40 sm:w-40 rounded-full bg-white/20 p-1 backdrop-blur">
               <div className="absolute inset-0 rounded-full overflow-hidden">
                 <img
@@ -101,9 +117,238 @@ const TeacherProfile = () => {
                 </div>
               </div>
             </div>
+            <div className="w-full mt-4">
+              <button
+                className="w-full bg-primary text-white px-4 py-2 rounded flex items-center justify-center gap-2"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Edit className="w-5 h-5" />
+                Editar docente
+              </button>
+            </div>
           </div>
         </div>
+        {docente && (
+          <Modal isOpen={isModalOpen} onClose={closeModal} size="xl">
+            <div className="p-4 relative">
+              <button
+                className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
+                onClick={closeModal}
+                aria-label="Cerrar"
+              >
+                ✕
+              </button>
 
+              <h3 className="pb-2 text-xl font-bold text-black dark:text-white sm:text-2xl">
+                Editar Docente
+              </h3>
+              <form>
+                <div className="flex gap-4">
+                  <div className="mb-4 w-full">
+                    <label
+                      htmlFor="firstName"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Nombre
+                    </label>
+                    <input
+                      id="firstName"
+                      type="text"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente?.firstName || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          firstName: e.target.value,
+                        }))
+                      }
+                      placeholder="Ingresa el nombre"
+                      aria-label="Nombre"
+                    />
+                  </div>
+
+                  <div className="mb-4 w-full">
+                    <label
+                      htmlFor="lastName"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Apellidos
+                    </label>
+                    <input
+                      id="lastName"
+                      type="text"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente?.lastName || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          lastName: e.target.value,
+                        }))
+                      }
+                      placeholder="Ingresa los apellidos"
+                      aria-label="Apellidos"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="mb-4 w-1/5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Género
+                    </label>
+                    <select
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente.gender ? "Masculino" : "Femenino"}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          gender: e.target.value === "Masculino",
+                        }))
+                      }
+                    >
+                      <option value="Masculino">Masculino</option>
+                      <option value="Femenino">Femenino</option>
+                    </select>
+                  </div>
+
+                  <div className="mb-4 w-2/5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Código de Registro
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente.registrationCode || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          registrationCode: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-4 w-2/5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Fecha de Nacimiento
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                        value={docente.birthDate || ""}
+                        onChange={(e) =>
+                          setDocente((prev) => ({
+                            ...prev!,
+                            birthDate: e.target.value,
+                          }))
+                        }
+                      />
+                      <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center  bg-white shadow-default  dark:bg-form-input  my-4 z-10">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M15.7504 2.9812H14.2879V2.36245C14.2879 2.02495 14.0066 1.71558 13.641 1.71558C13.2754 1.71558 12.9941 1.99683 12.9941 2.36245V2.9812H4.97852V2.36245C4.97852 2.02495 4.69727 1.71558 4.33164 1.71558C3.96602 1.71558 3.68477 1.99683 3.68477 2.36245V2.9812H2.25039C1.29414 2.9812 0.478516 3.7687 0.478516 4.75308V14.5406C0.478516 15.4968 1.26602 16.3125 2.25039 16.3125H15.7504C16.7066 16.3125 17.5223 15.525 17.5223 14.5406V4.72495C17.5223 3.7687 16.7066 2.9812 15.7504 2.9812ZM1.77227 8.21245H4.16289V10.9968H1.77227V8.21245ZM5.42852 8.21245H8.38164V10.9968H5.42852V8.21245ZM8.38164 12.2625V15.0187H5.42852V12.2625H8.38164V12.2625ZM9.64727 12.2625H12.6004V15.0187H9.64727V12.2625ZM9.64727 10.9968V8.21245H12.6004V10.9968H9.64727ZM13.8379 8.21245H16.2285V10.9968H13.8379V8.21245ZM2.25039 4.24683H3.71289V4.83745C3.71289 5.17495 3.99414 5.48433 4.35977 5.48433C4.72539 5.48433 5.00664 5.20308 5.00664 4.83745V4.24683H13.0504V4.83745C13.0504 5.17495 13.3316 5.48433 13.6973 5.48433C14.0629 5.48433 14.3441 5.20308 14.3441 4.83745V4.24683H15.7504C16.0316 4.24683 16.2566 4.47183 16.2566 4.75308V6.94683H1.77227V4.75308C1.77227 4.47183 1.96914 4.24683 2.25039 4.24683ZM1.77227 14.5125V12.2343H4.16289V14.9906H2.25039C1.96914 15.0187 1.77227 14.7937 1.77227 14.5125ZM15.7504 15.0187H13.8379V12.2625H16.2285V14.5406C16.2566 14.7937 16.0316 15.0187 15.7504 15.0187Z"
+                            fill="#64748B"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="mb-4 w-1/3">
+                    <label
+                      htmlFor="firstName"
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    >
+                      Linkedin
+                    </label>
+                    <input
+                      type="url"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente?.linkedIn || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          linkedIn: e.target.value,
+                        }))
+                      }
+                      placeholder="Ingresa el nombre"
+                      aria-label="Nombre"
+                    />
+                  </div>
+
+                  <div className="mb-4 w-1/3">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Facebook
+                    </label>
+                    <input
+                      type="url"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente.facebook || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          facebook: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="mb-4 w-1/3">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Mail
+                    </label>
+                    <input
+                      type="email"
+                      className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                      value={docente.mail || ""}
+                      onChange={(e) =>
+                        setDocente((prev) => ({
+                          ...prev!,
+                          mail: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4 w-full">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Descripción
+                  </label>
+                  <textarea
+                    className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                    value={docente.description || ""}
+                    onChange={(e) =>
+                      setDocente((prev) => ({
+                        ...prev!,
+                        description: e.target.value,
+                      }))
+                    }
+                  ></textarea>
+                </div>
+
+                <div className="flex justify-end mt-4">
+                  <button
+                    className="bg-primary text-white px-4 py-2 rounded"
+                    onClick={() => {
+                      closeModal();
+                    }}
+                  >
+                    Guardar Cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+          </Modal>
+        )}
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark w-2/3">
           <div className="p-4">
             <h3 className="text-xl font-semibold text-black dark:text-white mb-4">
@@ -167,6 +412,7 @@ const TeacherProfile = () => {
                         <div className="flex items-center space-x-3.5">
                           <button className="hover:text-primary">
                             <UserRoundPen
+                              onClick={() => handleEditClickLaboral(work)}
                               className="text-primary dark:text-white"
                               size={21}
                             />
@@ -184,6 +430,133 @@ const TeacherProfile = () => {
                 </tbody>
               </table>
             </div>
+            {laboral && (
+              <Modal isOpen={isModalOpen3} onClose={closeModal3} size="lg">
+                {laboral && (
+                  <div className="p-4 relative">
+                    <button
+                      className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
+                      onClick={closeModal3}
+                      aria-label="Cerrar"
+                    >
+                      ✕
+                    </button>
+
+                    <h3 className="pb-2 text-xl font-bold text-black dark:text-white sm:text-2xl">
+                      Editar Experiencia Laboral
+                    </h3>
+                    <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Institución
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        value={laboral.companyName || ""}
+                        onChange={(e) =>
+                          setLaboral((prev: any) => ({
+                            ...prev,
+                            companyName: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Cargo
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        value={laboral.position || ""}
+                        onChange={(e) =>
+                          setLaboral((prev: any) => ({
+                            ...prev,
+                            position: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Descripción del cargo
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        value={laboral.jobDescription || ""}
+                        onChange={(e) =>
+                          setLaboral((prev: any) => ({
+                            ...prev,
+                            jobDescription: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Cargo en I+D+I
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        value={laboral.jobIdi || ""}
+                        onChange={(e) =>
+                          setLaboral((prev: any) => ({
+                            ...prev,
+                            jobIdi: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Fecha Inicio
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          value={laboral.startDate || ""}
+                          onChange={(e) =>
+                            setLaboral((prev: any) => ({
+                              ...prev,
+                              startDate: e.target.value,
+                            }))
+                          }
+                        />
+                        <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center  bg-white shadow-default  dark:bg-form-input  my-4 z-10">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 18 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M15.7504 2.9812H14.2879V2.36245C14.2879 2.02495 14.0066 1.71558 13.641 1.71558C13.2754 1.71558 12.9941 1.99683 12.9941 2.36245V2.9812H4.97852V2.36245C4.97852 2.02495 4.69727 1.71558 4.33164 1.71558C3.96602 1.71558 3.68477 1.99683 3.68477 2.36245V2.9812H2.25039C1.29414 2.9812 0.478516 3.7687 0.478516 4.75308V14.5406C0.478516 15.4968 1.26602 16.3125 2.25039 16.3125H15.7504C16.7066 16.3125 17.5223 15.525 17.5223 14.5406V4.72495C17.5223 3.7687 16.7066 2.9812 15.7504 2.9812ZM1.77227 8.21245H4.16289V10.9968H1.77227V8.21245ZM5.42852 8.21245H8.38164V10.9968H5.42852V8.21245ZM8.38164 12.2625V15.0187H5.42852V12.2625H8.38164V12.2625ZM9.64727 12.2625H12.6004V15.0187H9.64727V12.2625ZM9.64727 10.9968V8.21245H12.6004V10.9968H9.64727ZM13.8379 8.21245H16.2285V10.9968H13.8379V8.21245ZM2.25039 4.24683H3.71289V4.83745C3.71289 5.17495 3.99414 5.48433 4.35977 5.48433C4.72539 5.48433 5.00664 5.20308 5.00664 4.83745V4.24683H13.0504V4.83745C13.0504 5.17495 13.3316 5.48433 13.6973 5.48433C14.0629 5.48433 14.3441 5.20308 14.3441 4.83745V4.24683H15.7504C16.0316 4.24683 16.2566 4.47183 16.2566 4.75308V6.94683H1.77227V4.75308C1.77227 4.47183 1.96914 4.24683 2.25039 4.24683ZM1.77227 14.5125V12.2343H4.16289V14.9906H2.25039C1.96914 15.0187 1.77227 14.7937 1.77227 14.5125ZM15.7504 15.0187H13.8379V12.2625H16.2285V14.5406C16.2566 14.7937 16.0316 15.0187 15.7504 15.0187Z"
+                              fill="#64748B"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end mt-4">
+                      <button
+                        className="bg-primary text-white px-4 py-2 rounded"
+                        onClick={() => {
+                          closeModal3();
+                        }}
+                      >
+                        Guardar Cambios
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Modal>
+            )}
           </div>
         </div>
       </div>

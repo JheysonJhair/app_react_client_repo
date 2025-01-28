@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../../../assets/svg/upload.svg";
+import LogoDark from "../../../assets/svg/upload_dark.svg";
 
 type FileData = {
   name: string;
@@ -10,7 +11,7 @@ type FileData = {
 interface FileUploadProps {
   allowedFormats: string[];
   maxSizeMB: number;
-  onFileUpload: (file: File) => void; // Espera un File, no un FileData
+  onFileUpload: (file: File) => void;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -44,10 +45,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
       setFile({
         name: selectedFile.name,
         size: selectedFile.size,
-        progress: 0, // Inicializa el progreso en 0
+        progress: 0,
       });
       setError(null);
-      setUploading(true); // Inicia la carga
+      setUploading(true);
     }
   };
 
@@ -60,41 +61,45 @@ const FileUpload: React.FC<FileUploadProps> = ({
           if (prevFile && prevFile.progress < 100) {
             return {
               ...prevFile,
-              progress: prevFile.progress + 10, // Incrementa el progreso
+              progress: prevFile.progress + 10,
             };
           }
           return prevFile!;
         });
-      }, 500); // Incrementa el progreso cada 500ms
+      }, 500);
 
       if (file?.progress >= 100) {
-        setUploading(false); // Detiene la carga cuando llega al 100%
+        setUploading(false);
 
-        // Convertir file a tipo File antes de pasar a onFileUpload
         const fileToUpload = new File([new Blob([file.name])], file.name, {
-          type: "application/octet-stream", // Aquí puedes especificar el tipo MIME adecuado
+          type: "application/octet-stream",
         });
 
-        onFileUpload(fileToUpload); // Llama a onFileUpload con el tipo correcto
-        clearInterval(interval); // Limpia el intervalo cuando termina
+        onFileUpload(fileToUpload);
+        clearInterval(interval);
       }
     }
 
     return () => {
       if (interval) {
-        clearInterval(interval); // Asegúrate de limpiar el intervalo
+        clearInterval(interval);
       }
     };
   }, [uploading, file, onFileUpload]);
 
   return (
-    <div className="flex flex-col items-center p-4 border border-gray-300 rounded-lg mb-4">
+    <div className="flex flex-col items-center p-4 border border-stroke bg-white  dark:border-slate-600 dark:bg-boxdark rounded-lg mb-4">
       <label
         htmlFor="fileInput"
         className="flex flex-col items-center cursor-pointer text-gray-500"
       >
         <div className="mb-2 text-2xl text-primary">
-          <img src={Logo} alt="Upload Icon" className="w-8 h-8" />
+          <img src={Logo} alt="Upload Icon" className="w-8 h-8 dark:hidden" />
+          <img
+            src={LogoDark}
+            alt="Upload Icon"
+            className="w-8 h-8 hidden dark:block"
+          />
         </div>
         <span>Haga clic para cargar</span>
       </label>

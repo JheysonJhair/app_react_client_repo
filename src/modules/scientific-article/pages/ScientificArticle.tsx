@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AiFillBook, AiFillFilePdf, AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { getScientificArticle } from "../../../services/ScientificArticle";
+import { getScientificArticle } from "../../../services/Student/ScientificArticle";
 import { ScientificArticleDto } from "../../../types/ScientificArticle";
 import { formatDate } from "../../../utils/util";
 

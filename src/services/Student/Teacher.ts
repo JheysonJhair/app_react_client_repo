@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ApiResponse } from "../types/Response/ApiResponse";
-import { TeacherDto } from "../types/Teacher";
+import { ApiResponse } from "../../types/Response/ApiResponse";
+import { TeacherDto } from "../../types/Teacher";
 
 //---------------------------------------------------------------- GET TEACHERS
 export const getTeacher = async (): Promise<TeacherDto[]> => {

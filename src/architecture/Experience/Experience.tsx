@@ -1,5 +1,5 @@
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import { getTeacherById } from "../../services/Teacher";
+import { getTeacherById } from "../../services/Teacher/Teacher";
 import {
   ExperienceTeacher,
   ExperienceThesisAdvisor,

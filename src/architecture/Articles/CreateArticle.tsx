@@ -401,6 +401,7 @@ const CreateArticle = () => {
           draggable
           pauseOnHover
           theme="light"
+          className={" z-9999"}
           transition={Bounce}
         />
       </div>

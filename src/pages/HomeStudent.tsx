@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hero } from "./components/Hero";
 import { TeacherDto } from "../types/Teacher";
-import { getTeacher } from "../services/Student/Teacher";
+import { getTeachers } from "../services/Student/Teacher";
+
 
 export const HomeStudent = () => {
   const [docentes, setDocentes] = useState<TeacherDto[]>([]);
@@ -14,7 +15,7 @@ export const HomeStudent = () => {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        const products = await getTeacher();
+        const products = await getTeachers();
         console.log(products);
         setDocentes(products);
         setLoading(false);

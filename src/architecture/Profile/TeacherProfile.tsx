@@ -8,7 +8,7 @@ import { FaEnvelope, FaFacebook, FaLinkedin } from "react-icons/fa";
 import Modal from "../../pages/Modal";
 import { validateForm } from "../../validation/validateFormProfileTeacher";
 import { ToastContainer, Bounce, toast } from "react-toastify";
-import { ProfileTeacher } from "../../types/Teacher/ProfileTeacher";
+import { ProfileTeacher } from "../../types/Teacher/Teacher";
 
 const TeacherProfile = () => {
   const [docente, setDocente] = useState<TeacherDto | null>(null);
@@ -29,10 +29,9 @@ const TeacherProfile = () => {
     facebook: "",
     mail: "",
     description: "",
-    image:""
+    image: "",
   });
 
- 
   const [errors, setErrors] = useState<Record<string, string>>({
     firstName: "",
     lastName: "",
@@ -43,7 +42,7 @@ const TeacherProfile = () => {
     Facebook: "",
     mail: "",
     description: "",
-    image:""
+    image: "",
   });
 
   const handleInputChange = (
@@ -71,8 +70,8 @@ const TeacherProfile = () => {
 
     const { tempErrors, isValid } = validateForm(data);
     setErrors(tempErrors);
-
     if (isValid) {
+      console.log(data);
       try {
         const response = await fetch("https://api.ejemplo.com/proyecto", {
           method: "POST",
@@ -141,7 +140,7 @@ const TeacherProfile = () => {
     const fetchTeacher = async () => {
       try {
         const fetchedTeacher = await getTeacherById(1);
-        console.log(fetchedTeacher)
+        console.log(fetchedTeacher);
         setDocente(fetchedTeacher);
         setData(user);
       } catch (error) {
@@ -161,7 +160,7 @@ const TeacherProfile = () => {
       <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 ">
         <div className="overflow-hidden rounded-sm border mr-4 border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark w-full sm:w-2/3 md:w-1/2 lg:w-1/3 mx-auto">
           <div className="px-4 pb-6 text-center lg:pb-7 xl:pb-7">
-            <div className="relative mt-4 z-30 mx-auto h-30 w-30 sm:h-40 sm:w-40 rounded-full bg-white/20 p-1 backdrop-blur">
+            <div className="relative mt-4  mx-auto h-30 w-30 sm:h-40 sm:w-40 rounded-full bg-white/20 p-1 backdrop-blur">
               <div className="absolute inset-0 rounded-full overflow-hidden">
                 <img
                   src={docente.image}
@@ -366,10 +365,12 @@ const TeacherProfile = () => {
                           errors.birthDate
                             ? "border-red-500 dark:border-red-500"
                             : "border-stroke dark:border-form-strokedark"
-                        } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                        } bg-transparent  px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                         placeholder="mm/dd/yyyy"
                         data-class="flatpickr-right"
-                        value={data.birthDate}
+                        value={
+                          data.birthDate ? data.birthDate.split("T")[0] : ""
+                        }
                         onChange={handleInputChange}
                       />
                       {errors.birthDate && (
@@ -707,6 +708,7 @@ const TeacherProfile = () => {
           draggable
           pauseOnHover
           theme="light"
+          className={" z-9999"}
           transition={Bounce}
         />
       </div>

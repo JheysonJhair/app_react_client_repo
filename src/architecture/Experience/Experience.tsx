@@ -10,6 +10,10 @@ import { Trash2, UserRoundPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import Loader from "../../common/Loader";
 import Modal from "../../pages/Modal";
+import { validateFormLaboral } from "../../validation/validateFormExperience";
+import { updateExperienceLaboral } from "../../services/Teacher/Experience";
+import { ToastContainer, Bounce, toast } from "react-toastify";
+
 const Experience = () => {
   const [docente, setDocente] = useState<TeacherDto | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +24,14 @@ const Experience = () => {
     useState<ExperienceThesisAdvisor | null>(null);
   const [laboralDocente, setLaboralDocente] =
     useState<ExperienceTeacher | null>(null);
-  const [laboral, setLaboral] = useState<WorkExperience | null>(null);
+  const [laboral, setLaboral] = useState<any>({
+    institution: "",
+    Charge: "",
+    descriptionJob: "",
+    idiCharge: "",
+    startDate: "",
+    endDate: "",
+  });
 
   useEffect(() => {
     const fetchTeacher = async () => {
@@ -57,6 +68,67 @@ const Experience = () => {
     setLaboral(data);
     setIsModalOpen3(true);
   };
+
+  const [errorsLaboral, setErrorsLaboral] = useState<Record<string, string>>({
+    institution: "",
+    Charge: "",
+    descriptionJob: "",
+    idiCharge: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const handleSubmitLaboral = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const { tempErrors, isValid } = validateFormLaboral(laboral);
+    setErrorsLaboral(tempErrors);
+
+    if (isValid) {
+      try {
+        const response = await updateExperienceLaboral(1, laboral);
+
+        if (response.success) {
+          toast.success(response.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        } else {
+          toast.error("Erro de backend", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        }
+      } catch (error) {
+        toast.error("Opps, Algo salio mal!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    }
+  };
+
   if (!docente) {
     return <Loader />;
   }
@@ -157,7 +229,7 @@ const Experience = () => {
             {laboral && (
               <div className="p-4 relative">
                 <button
-                     className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
+                  className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
                   onClick={closeModal3}
                   aria-label="Cerrar"
                 >
@@ -182,6 +254,11 @@ const Experience = () => {
                       }))
                     }
                   />
+                  {errorsLaboral.companyName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsLaboral.companyName}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-4">
@@ -304,9 +381,7 @@ const Experience = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     className="bg-primary text-white px-4 py-2 rounded"
-                    onClick={() => {
-                      closeModal3();
-                    }}
+                    onClick={() => handleSubmitLaboral(laboral)}
                   >
                     Guardar Cambios
                   </button>
@@ -412,7 +487,7 @@ const Experience = () => {
             {laboralDocente && (
               <div className="p-4 relative">
                 <button
-                     className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
+                  className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
                   onClick={closeModal2}
                   aria-label="Cerrar"
                 >
@@ -655,7 +730,7 @@ const Experience = () => {
             {asesorTesis && (
               <div className="p-4 relative">
                 <button
-                     className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
+                  className="absolute top-2 right-2 text-black dark:text-white  hover:text-opacity-70 "
                   onClick={closeModal}
                   aria-label="Cerrar"
                 >
@@ -778,6 +853,20 @@ const Experience = () => {
           </Modal>
         )}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        className={" z-9999"}
+        transition={Bounce}
+      />
     </>
   );
 };

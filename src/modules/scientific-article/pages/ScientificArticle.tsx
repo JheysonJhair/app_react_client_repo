@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AiFillBook, AiFillFilePdf, AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { getScientificArticle } from "../../../services/Student/ScientificArticle";
+import { getScientificArticles } from "../../../services/Student/ScientificArticle";
 import { ScientificArticleDto } from "../../../types/ScientificArticle";
 import { formatDate } from "../../../utils/util";
 
@@ -20,7 +20,7 @@ export const ScientificArticle = () => {
     const loadArticles = async () => {
       try {
         setLoading(true);
-        const fetchedArticles = await getScientificArticle();
+        const fetchedArticles = await getScientificArticles();
         setArticles(fetchedArticles);
         setFilteredArticles(fetchedArticles);
         setLoading(false);

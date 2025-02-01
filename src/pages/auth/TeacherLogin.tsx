@@ -13,27 +13,6 @@ const TeacherLogin = () => {
   //---------------------------------------------------------------- POST LOGIN
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "admin@gmail.com" && password === "12345678") {
-      sessionStorage.setItem("isAuthenticated", "true");
-      const data = {
-        firstName: "Jhair",
-        lastName: "Arone Angeles",
-        mail: "edsghot@gmail.com",
-        gender: "Masculino",
-        linkedIn: "http://www.linkedin.com",
-
-        facebook: "http://www.facebook.com",
-        birthDate: "2003-04-26T00:00:00",
-        registrationCode: "xsax-1s2s23-1ws",
-        image:
-          "https://s3.abcstatics.com/media/summum/2021/10/01/maxi_iglesias-kU2E--1248x698@abc.jpeg",
-        description:
-          "Profesor Ordinario en la categoría de Principal en la Universidad Nacional Micaela Batidas de Apurímac - Perú. Ingeniero Informático y de Sistemas, con Magister en Ciencias mención Computación ",
-      };
-
-      sessionStorage.setItem("userData", JSON.stringify(data));
-      navigate("/teacher");
-    }
     try {
       const response = await login({
         email: email,
@@ -42,7 +21,8 @@ const TeacherLogin = () => {
       if (response.success) {
         sessionStorage.setItem("isAuthenticated", "true");
         sessionStorage.setItem("userData", JSON.stringify(response.data));
-        toast.success("Bienvenido docente!", {
+
+        toast.success(response.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -55,7 +35,7 @@ const TeacherLogin = () => {
         });
         navigate("/teacher");
       } else {
-        toast.error("Credenciales incorrectas", {
+        toast.error(response.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -250,7 +230,6 @@ const TeacherLogin = () => {
         theme="light"
         transition={Bounce}
       />
-      ;
     </div>
   );
 };

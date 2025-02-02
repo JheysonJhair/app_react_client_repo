@@ -31,10 +31,6 @@ export const validateForm = (formData: ProfileTeacherRegister) => {
     isValid = false;
   }
 
-  if (!formData.image.trim()) {
-    tempErrors.image = "La imagen es requerida.";
-    isValid = false;
-  }
   if (!formData.password.trim()) {
     tempErrors.password = "La contraseña es requerida.";
     isValid = false;

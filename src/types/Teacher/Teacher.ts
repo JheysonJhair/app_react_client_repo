@@ -12,11 +12,16 @@ export interface ProfileTeacher {
   registrationCode?: string;
 
   description: string;
-  image: string;
+  image: string | File;
   password: string;
 
   linkedIn?: string;
   facebook?: string;
+
+  gender?: boolean;
+  position?: string;
+  phone?: string;
+  birthDate?: string;
 }
 
 export interface ProfileTeacherRegister extends ProfileTeacher {

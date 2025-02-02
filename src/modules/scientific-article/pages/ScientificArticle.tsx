@@ -45,7 +45,7 @@ export const ScientificArticle = () => {
   }, [selectedLevel, searchText, articles]);
 
   const handleCardClick = (article: ScientificArticleDto) => {
-    navigate(`/student/scientific-article/${article.idScientificArticle}`, {
+    navigate(`/student/scientific-article/${article.id}`, {
       state: article,
     });
   };
@@ -91,7 +91,7 @@ export const ScientificArticle = () => {
                 {filteredArticles.length > 0 ? (
                   filteredArticles.map((article) => (
                     <article
-                      key={article.idScientificArticle}
+                      key={article.id}
                       className="bg-white shadow-md rounded-lg p-4 mb-4"
                     >
                       <a

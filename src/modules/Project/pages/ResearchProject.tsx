@@ -26,7 +26,7 @@ export const ResearchProject = () => {
   }, []);
 
   const handleCardClick = (project: ResearchProjectDto) => {
-    navigate(`/student/research-project/${project.idResearchProject}`, {
+    navigate(`/student/research-project/${project.id}`, {
       state: project,
     });
   };
@@ -66,7 +66,7 @@ export const ResearchProject = () => {
               <section className="w-3/4">
                 {project.map((project) => (
                   <article
-                    key={project.idResearchProject}
+                    key={project.id}
                     className="bg-white shadow-md rounded-lg p-4 mb-4"
                   >
                     <a

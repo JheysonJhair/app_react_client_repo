@@ -16,7 +16,14 @@ export const validateForm = (formData: ProjectFormData) => {
     tempErrors.authors = "Los autores son requeridos.";
     isValid = false;
   }
-
+  if (!formData.editor) {
+    tempErrors.editor = "El editor es requerido.";
+    isValid = false;
+  }
+  if (!formData.doi) {
+    tempErrors.doi = "El DOI es requerido.";
+    isValid = false;
+  }
   if (!formData.year) {
     tempErrors.year = "El año es requerido.";
     isValid = false;
@@ -27,6 +34,14 @@ export const validateForm = (formData: ProjectFormData) => {
     isValid = false;
   } else if (formData.description.length < 10) {
     tempErrors.description = "La descripción debe tener al menos 10 caracteres.";
+    isValid = false;
+  }
+
+  if (!formData.summary.trim()) {
+    tempErrors.summary = "El resumen es requerido.";
+    isValid = false;
+  } else if (formData.summary.length < 10) {
+    tempErrors.summary = "El resumen debe tener al menos 10 caracteres.";
     isValid = false;
   }
 

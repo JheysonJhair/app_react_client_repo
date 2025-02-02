@@ -21,7 +21,7 @@ const TeacherRegister: React.FC = () => {
     concytec: "",
     confirmPassword: "",
     description:
-      "Soy un docente apasionado por la enseñanza, comprometido con el desarrollo académico y personal de mis estudiantes. Mi objetivo es fomentar el pensamiento crítico y crear un ambiente de aprendizaje inclusivo y motivador. A través de mi labor, busco inspirar a mis alumnos a alcanzar su máximo potencial y prepararlos para enfrentar los desafíos del futuro.",
+      "Soy un docente apasionado por la enseñanza, comprometido con el desarrollo académico y personal de mis estudiantes. Mi objetivo es fomentar el pensamiento crítico y crear un ambiente de aprendizaje inclusivo y motivador.",
     image:
       "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png",
     password: "",

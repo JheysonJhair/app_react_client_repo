@@ -1,5 +1,5 @@
 export interface ScientificArticleDto {
-  idScientificArticle: number;
+  id: number;
   name: string;
   description: string;
   summary: string;

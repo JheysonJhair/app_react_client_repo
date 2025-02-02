@@ -1,7 +1,7 @@
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import { Edit, Trash2, UserRoundPen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getTeacherById } from "../../services/Teacher/Teacher";
+import { getTeacherById, updateTeacher } from "../../services/Teacher/Teacher";
 import Loader from "../../common/Loader";
 import { TeacherDto, WorkExperience } from "../../types/Teacher";
 import { FaEnvelope, FaFacebook, FaLinkedin } from "react-icons/fa";
@@ -20,29 +20,54 @@ const TeacherProfile = () => {
   const user = userData ? JSON.parse(userData) : null;
 
   const [data, setData] = useState<ProfileTeacher>({
+    id: user.id,
     firstName: "",
     lastName: "",
-    gender: "",
-    registrationCode: "",
-    birthDate: "",
-    linkedIn: "",
-    facebook: "",
+    dni: "",
+    school: 0,
     mail: "",
+
+    orcid: "",
+    scopus: "",
+    concytec: "",
+    registrationCode: "",
+
     description: "",
     image: "",
+    password: "",
+
+    linkedIn: "",
+    facebook: "",
+
+    gender: true,
+    position: "",
+    phone: "",
+    birthDate: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({
     firstName: "",
     lastName: "",
-    gender: "",
-    registrationCode: "",
-    birthDate: "",
-    linkedIn: "",
-    Facebook: "",
+    dni: "",
+    school: "",
     mail: "",
+
+    orcid: "",
+    scopus: "",
+    concytec: "",
+    registrationCode: "",
+
     description: "",
     image: "",
+    password: "",
+
+    linkedIn: "",
+    facebook: "",
+
+    gender: "",
+    position: "",
+    phone: "",
+    birthDate: "",
   });
 
   const handleInputChange = (
@@ -52,13 +77,20 @@ const TeacherProfile = () => {
   ) => {
     const { name, value } = e.target;
 
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    if (name === "image" && (e.target as HTMLInputElement).files) {
+      const file = (e.target as HTMLInputElement).files![0];
+      setData((prevData) => ({
+        ...prevData,
+        image: file,
+      }));
+    } else {
+      setData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
 
     const { tempErrors } = validateForm({ ...data, [name]: value });
-
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: tempErrors[name],
@@ -67,24 +99,38 @@ const TeacherProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const { tempErrors, isValid } = validateForm(data);
     setErrors(tempErrors);
     if (isValid) {
-      console.log(data);
       try {
-        const response = await fetch("https://api.ejemplo.com/proyecto", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        console.log("asdasda");
+        const formData = new FormData();
+        formData.append("Id", user.id || "");
+        formData.append("FirstName", data.firstName || "");
+        formData.append("LastName", data.lastName || "");
+        formData.append("Dni", data.dni || "");
+        formData.append("School", data.school ? data.school.toString() : "");
+        formData.append("Mail", data.mail || "");
+        formData.append("Orcid", data.orcid || "");
+        formData.append("Scopus", data.scopus || "");
+        formData.append("Concytec", data.concytec || "");
+        formData.append("RegistrationCode", data.registrationCode || "");
+        formData.append("Description", data.description || "");
+        if (data.image) {
+          formData.append("Image", data.image);
+        }
+        formData.append("Password", data.password || "");
+        formData.append("LinkedIn", data.linkedIn || "");
+        formData.append("Facebook", data.facebook || "");
+        formData.append("Gender", data.gender ? data.gender.toString() : "");
+        formData.append("Position", data.position || "");
+        formData.append("Phone", data.phone || "");
+        formData.append("BirthDate", data.birthDate || "");
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          toast.success("Se creo correctamente", {
+        console.log(formData);
+        const response = await updateTeacher(formData);
+        if (response.success) {
+          toast.info(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -95,8 +141,51 @@ const TeacherProfile = () => {
             theme: "light",
             transition: Bounce,
           });
+
+          setData({
+            id: user.id,
+            firstName: "",
+            lastName: "",
+            dni: "",
+            school: 0,
+            mail: "",
+            orcid: "",
+            scopus: "",
+            concytec: "",
+            registrationCode: "",
+            description: "",
+            image: "",
+            password: "",
+            linkedIn: "",
+            facebook: "",
+            gender: true,
+            position: "",
+            phone: "",
+            birthDate: "",
+          });
+
+          setErrors({
+            firstName: "",
+            lastName: "",
+            dni: "",
+            school: "",
+            mail: "",
+            orcid: "",
+            scopus: "",
+            concytec: "",
+            registrationCode: "",
+            description: "",
+            image: "",
+            password: "",
+            linkedIn: "",
+            facebook: "",
+            gender: "",
+            position: "",
+            phone: "",
+            birthDate: "",
+          });
         } else {
-          toast.error("Erro de backend", {
+          toast.error(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -109,7 +198,8 @@ const TeacherProfile = () => {
           });
         }
       } catch (error) {
-        toast.error("Opps, Algo salio mal!", {
+        console.error("Detalles del error:", error);
+        toast.error("Oops, algo salió mal!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -139,8 +229,7 @@ const TeacherProfile = () => {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const fetchedTeacher = await getTeacherById(1);
-        console.log(fetchedTeacher);
+        const fetchedTeacher = await getTeacherById(user.id);
         setDocente(fetchedTeacher);
         setData(user);
       } catch (error) {
@@ -148,7 +237,7 @@ const TeacherProfile = () => {
       }
     };
     fetchTeacher();
-  }, [1]);
+  }, [user.id]);
 
   if (!docente) {
     return <Loader />;
@@ -257,7 +346,7 @@ const TeacherProfile = () => {
               </h3>
               <form onSubmit={handleSubmit}>
                 <div className="flex gap-4">
-                  <div className="mb-4 w-full">
+                  <div className="mb-4  w-2/5">
                     <label
                       htmlFor="firstName"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -283,7 +372,7 @@ const TeacherProfile = () => {
                     )}
                   </div>
 
-                  <div className="mb-4 w-full">
+                  <div className="mb-4  w-2/5">
                     <label
                       htmlFor="lastName"
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -308,9 +397,6 @@ const TeacherProfile = () => {
                       </p>
                     )}
                   </div>
-                </div>
-
-                <div className="flex gap-4">
                   <div className="mb-4 w-1/5">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Género
@@ -329,8 +415,34 @@ const TeacherProfile = () => {
                       <option value="Femenino">Femenino</option>
                     </select>
                   </div>
+                </div>
 
-                  <div className="mb-4 w-2/5">
+                <div className="flex gap-4">
+                  <div className="mb-4 w-1/4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Telefono
+                    </label>
+                    <input
+                      id="phone"
+                      type="number"
+                      name="phone"
+                      placeholder="+51"
+                      className={`w-full rounded border-[1.5px] ${
+                        errors.phone
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-stroke dark:border-form-strokedark"
+                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                      value={data.phone}
+                      onChange={handleInputChange}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mb-4 w-1/4">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Código de Registro
                     </label>
@@ -338,6 +450,7 @@ const TeacherProfile = () => {
                       id="registrationCode"
                       type="text"
                       name="registrationCode"
+                      placeholder="0000"
                       className={`w-full rounded border-[1.5px] ${
                         errors.registrationCode
                           ? "border-red-500 dark:border-red-500"
@@ -352,8 +465,30 @@ const TeacherProfile = () => {
                       </p>
                     )}
                   </div>
-
-                  <div className="mb-4 w-2/5">
+                  <div className="mb-4 w-1/4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Contraseña
+                    </label>
+                    <input
+                      id="password"
+                      type="password"
+                      name="password"
+                      placeholder="0000"
+                      className={`w-full rounded border-[1.5px] ${
+                        errors.password
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-stroke dark:border-form-strokedark"
+                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                      value={data.password}
+                      onChange={handleInputChange}
+                    />
+                    {errors.password && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.password}
+                      </p>
+                    )}
+                  </div>
+                  <div className="mb-4 w-1/4">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Fecha de Nacimiento
                     </label>
@@ -453,26 +588,76 @@ const TeacherProfile = () => {
                   </div>
                 </div>
 
-                <div className="mb-4 w-full">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Descripción
-                  </label>
-                  <textarea
-                    name="description"
-                    placeholder="Ingrese el titulo"
-                    className={`w-full rounded border-[1.5px] ${
-                      errors.description
-                        ? "border-red-500 dark:border-red-500"
-                        : "border-stroke dark:border-form-strokedark"
-                    } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={data.description}
-                    onChange={handleInputChange}
-                  ></textarea>
-                  {errors.description && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.description}
-                    </p>
-                  )}
+                <div className="flex gap-4">
+                  <div className="mb-4  w-3/5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Descripción
+                    </label>
+                    <textarea
+                      name="description"
+                      rows={4}
+                      placeholder="Ingrese el título"
+                      className={`w-full rounded-md border-[1.5px] ${
+                        errors.description
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-stroke dark:border-form-strokedark"
+                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                      value={data.description}
+                      onChange={handleInputChange}
+                    ></textarea>
+                    {errors.description && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mb-4 w-2/5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Imagen
+                    </label>
+
+                    <div className="relative">
+                      {data.image && typeof data.image === "string" ? (
+                        <div className="mb-3 w-full h-18 flex justify-center items-center bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
+                          <img
+                            src={data.image}
+                            alt="Imagen seleccionada"
+                            className="object-contain w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-18 flex justify-center items-center bg-gray-100 dark:bg-gray-700 rounded">
+                          <span className="text-gray-500 dark:text-gray-300">
+                            Sin imagen seleccionada
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <input
+                      type="file"
+                      name="image"
+                      className={`w-full rounded border-[1.5px] ${
+                        errors.image
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-stroke dark:border-form-strokedark"
+                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const imageUrl = URL.createObjectURL(file);
+                          setData({ ...data, image: imageUrl });
+                        }
+                      }}
+                    />
+
+                    {errors.image && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.image}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-end mt-4">

@@ -32,7 +32,7 @@ const CreateExperience = () => {
     startDate: "",
     endDate: "",
     isCurrent: false,
-    teacherId: user.idTeacher,
+    teacherId: user.id,
   });
 
   const [errorsLaboral, setErrorsLaboral] = useState<Record<string, string>>({
@@ -54,7 +54,7 @@ const CreateExperience = () => {
       jobDescription: "",
       startDate: "",
       endDate: "",
-      teacherId: user.idTeacher,
+      teacherId: user.id,
     });
 
   const [errorsLaboralDocente, setErrorsLaboralDocente] = useState<
@@ -74,7 +74,7 @@ const CreateExperience = () => {
     thesisStudent: "",
     repository: "",
     thesisAcceptanceDate: "",
-    teacherId: user.idTeacher,
+    teacherId: user.id,
   });
 
   const [errorsTesis, setErrorsTesis] = useState<Record<string, string>>({

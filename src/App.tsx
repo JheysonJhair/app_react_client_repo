@@ -24,6 +24,7 @@ import CreateProject from "./architecture/Projects/CreateProject";
 import TeacherRegister from "./pages/auth/TeacherRegister";
 import VerificationAccount from "./pages/auth/VerificationAccount";
 import CreateExperience from "./architecture/Experience/CreateExperience";
+import ProjectDetail from "./architecture/Projects/ProjectDetail";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="experience" element={<Experience />} />
             <Route path="create-experience" element={<CreateExperience />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="project-detail/:id" element={<ProjectDetail />} />
             <Route path="create-project" element={<CreateProject />} />
             <Route path="articles" element={<Articles />} />
             <Route path="create-article" element={<CreateArticle />} />

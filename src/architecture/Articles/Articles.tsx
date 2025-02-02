@@ -1,37 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import { Trash2, UserRoundPen } from "lucide-react";
 import Modal from "../../pages/Modal";
 import { Article } from "../../types/Teacher/Article";
 import { validateForm } from "../../validation/validateFormArticle";
 import { ToastContainer, Bounce, toast } from "react-toastify";
+import {
+  deleteArticleDocente,
+  getScientificArticlesByTeacherId,
+  updateArticleDocente,
+} from "../../services/Teacher/ScientificArticle";
+import ConfirmModal from "../../components/ModalConfirm/ConfirmModal";
+import Loader from "../../common/Loader";
 
 const Articles = () => {
+  const userData = sessionStorage.getItem("userData");
+  const user = userData ? JSON.parse(userData) : null;
+  const [isLoading, setIsLoading] = useState<boolean>(true); 
+
+  const [deleteId, setDeleteId] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  //---------------------------------------------------------------- GET ALL
+
+    const fetchArticleTeacher = async () => {
+      if (!user) return;
+  
+      setIsLoading(true);
+  
+      try {
+        const fetchedTeacher = await getScientificArticlesByTeacherId(user.id);
+        console.log(fetchedTeacher);
+        setArticles(fetchedTeacher || []);
+      } catch (error) {
+        console.error("Error al obtener articulos:", error);
+        setArticles([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    useEffect(() => {
+      fetchArticleTeacher();
+    }, [user?.id]);
+
+
+  const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
   const [data, setData] = useState<Article>({
-    title: "",
-    link: "",
-    doi: "",
-    articleType: 0,
-    date: "",
-    status: 0,
+    name: "",
     description: "",
     summary: "",
+    date: "",
+    doi: "",
+    authors: "",
+    pdf: "",
+    editor: "",
+    idNivel: 0,
+    idTeacher: user.id,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({
-    title: "",
-    link: "",
-    doi: "",
-    articleType: "",
-    date: "",
-    status: "",
+    name: "",
     description: "",
     summary: "",
+    date: "",
+    doi: "",
+    authors: "",
+    pdf: "",
+    editor: "",
+    idNivel: "",
   });
 
   const handleInputChange = (
@@ -59,21 +103,14 @@ const Articles = () => {
 
     const { tempErrors, isValid } = validateForm(data);
     setErrors(tempErrors);
-    if (isValid) {
-      console.log(data);
-      try {
-        const response = await fetch("https://api.ejemplo.com/proyecto", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          toast.success("Se creo correctamente", {
+    if (isValid) {
+      try {
+        console.log(data);
+        const response = await updateArticleDocente(data);
+
+        if (response.success) {
+          toast.success(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -84,8 +121,30 @@ const Articles = () => {
             theme: "light",
             transition: Bounce,
           });
+          setData({
+            name: "",
+            description: "",
+            summary: "",
+            date: "",
+            doi: "",
+            authors: "",
+            pdf: "",
+            editor: "",
+            idNivel: 0,
+          });
+          setErrors({
+            name: "",
+            description: "",
+            summary: "",
+            date: "",
+            doi: "",
+            authors: "",
+            pdf: "",
+            editor: "",
+            idNivel: "",
+          });
         } else {
-          toast.error("Erro de backend", {
+          toast.error(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -97,6 +156,8 @@ const Articles = () => {
             transition: Bounce,
           });
         }
+        closeModal();
+        fetchArticleTeacher();
       } catch (error) {
         toast.error("Opps, Algo salio mal!", {
           position: "top-right",
@@ -116,61 +177,66 @@ const Articles = () => {
   const handleEditClickarticle = (newData: Article) => {
     console.log(newData);
     setData((prevData) => ({
-      ...prevData, 
-      ...newData, 
+      ...prevData,
+      ...newData,
     }));
     setIsModalOpen(true);
   };
 
-  const articles = [
-    {
-      title: "La inteligencia artificial en la educación superior",
-      date: "2023",
-      doi: "345453",
-      link: "https://example.com/ai_education_2023",
-      articleType: 0,
-      status: 1,
-      description: "aaaaaaaaaaaaaa",
-      summary: "aaaaaaaaaaa",
-    },
-    {
-      title: "El impacto de la tecnología en la salud",
-      date: "2022",
-      doi: "345453",
-      link: "https://example.com/tech_health_2022",
-      status: 1,
-      articleType: 0,
-      description: "aaaaaaaaaaaaaa",
-      summary: "aaaaaaaaaaa",
-    },
-    {
-      title: "Nuevas tendencias en la educación a distancia",
-      date: "2021",
-      doi: "1345453",
-      link: "https://example.com/education_distance_2021",
-      articleType: 0,
-      status: 1,
-      description: "aaaaaaaaaaaaaa",
-      summary: "aaaaaaaaaaa",
-    },
-    {
-      title: "Desarrollo de software para sistemas inteligentes",
-      date: "2023",
-      doi: "345453",
-      link: "https://example.com/software_smart_systems_2023",
-      articleType: 0,
-      status: 1,
-      description: "aaaaaaaaaaaaaa",
-      summary: "aaaaaaaaaaa",
-    },
-    {
-      title: "Innovaciones en la biotecnología aplicada",
-      date: "2020",
-      doi: "3454530",
-      link: "https://example.com/biotech_innovations_2020",
-      status: 1,
-    },
-  ];
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      const response = await deleteArticleDocente(deleteId);
+      if (response.success) {
+        setShowModal(false);
+        toast.success(response.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        fetchArticleTeacher();
+      } else {
+        toast.error(response.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    } catch (error) {
+      toast.error("Opps, Algo salio mal!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowModal(false);
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -180,86 +246,140 @@ const Articles = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[280px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                <th className="y-4 px-1 font-medium text-black dark:text-white xl:pl-11">
                   Titulo
                 </th>
-                <th className="min-w-[50px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="y-4 px-1 font-medium text-black dark:text-white xl:pl-11">
+                  Descripcion
+                </th>
+                <th className="y-4 px-1 font-medium text-black dark:text-white xl:pl-11">
+                  Resumen
+                </th>
+                <th className=" py-4 px-1 font-medium text-black dark:text-white">
                   Año
                 </th>
-                <th className="min-w-[60px] py-4 px-4 font-medium text-black dark:text-white">
+
+                <th className=" py-4 px-1 font-medium text-black dark:text-white">
                   DOI
                 </th>
-                <th className="min-w-[20px] py-4 px-4 font-medium text-black dark:text-white">
-                  Enlace
+                <th className=" py-4 px-1 font-medium text-black dark:text-white xl:pl-11">
+                  Autores
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Estado
+                <th className="py-4 px-1 font-medium text-black dark:text-white ">
+                  Pdf
                 </th>
-                <th className="min-w-[60px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-1 font-medium text-black dark:text-white xl:pl-11">
+                  Editor
+                </th>
+                <th className=" py-4 px-1 font-medium text-black dark:text-white">
+                  Tipo de articulo
+                </th>
+                <th className=" py-4 px-1 font-medium text-black dark:text-white">
                   Acciones
                 </th>
               </tr>
             </thead>
             <tbody>
-              {articles.map((article, index) => (
-                <tr key={index}>
-                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <p className="text-black dark:text-white">
-                      {article.title}
-                    </p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{article.date}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{article.doi}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{article.link}</p>
-                  </td>
+              {articles.length > 0 ? (
+                articles.map((article, index) => (
+                  <tr key={index}>
+                    <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.name.length > 5
+                          ? article.name.slice(0, 5) + "..."
+                          : article.name}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.description.length > 5
+                          ? article.description.slice(0, 5) + "..."
+                          : article.description}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.summary.length > 5
+                          ? article.summary.slice(0, 5) + "..."
+                          : article.summary}
+                      </p>
+                    </td>
 
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p
-                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                        article.status === 1
-                          ? "bg-success text-success"
-                          : article.status === 2
-                          ? "bg-danger text-danger"
-                          : "bg-warning text-warning"
-                      }`}
-                    >
-                      {article.status === 1
-                        ? "Activo"
-                        : article.status === 2
-                        ? "Inactivo"
-                        : "Pendiente"}
-                    </p>
-                  </td>
+                    <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {new Date(article.date).toLocaleDateString("es-ES")}
+                      </p>
+                    </td>
 
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div className="flex items-center space-x-3.5">
-                      <button className="hover:text-primary">
-                        <UserRoundPen
-                          onClick={() => handleEditClickarticle(article)}
-                          className="text-primary dark:text-white"
-                          size={21}
-                        />
-                      </button>
-                      <button className="hover:text-primary">
-                        <Trash2
-                          className="text-primary dark:text-white"
-                          size={21}
-                        />
-                      </button>
-                    </div>
+                    <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {article.doi}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.authors}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {article.pdf.length > 5
+                          ? article.pdf.slice(0, 5) + "..."
+                          : article.pdf}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.editor.length > 5
+                          ? article.editor.slice(0, 5) + "..."
+                          : article.editor}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                      <p className="text-black dark:text-white">
+                        {article.idNivel}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                        <button className="hover:text-primary">
+                          <UserRoundPen
+                            onClick={() => handleEditClickarticle(article)}
+                            className="text-primary dark:text-white"
+                            size={21}
+                          />
+                        </button>
+                        <button
+                          className="hover:text-primary"
+                          onClick={() => {
+                            setShowModal(true);
+                            setDeleteId(article.id);
+                          }}
+                        >
+                          <Trash2
+                            className="text-primary dark:text-white"
+                            size={21}
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={10}
+                    className="py-5 px-4 text-center text-gray-500 dark:text-gray-400"
+                  >
+                    No hay articulos
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
         {data && (
-          <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
+          <Modal isOpen={isModalOpen} onClose={closeModal} size="xl">
             {data && (
               <div className="p-4 relative">
                 <button
@@ -274,76 +394,83 @@ const Articles = () => {
                   Editar Articulo
                 </h3>
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Título
-                    </label>
-                    <input
-                      id="title"
-                      type="text"
-                      name="title"
-                      className={`w-full rounded border-[1.5px] ${
-                        errors.title
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-stroke dark:border-form-strokedark"
-                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                      value={data.title}
-                      onChange={handleInputChange}
-                    />
-                    {errors.title && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.title}
-                      </p>
-                    )}
-                  </div>
-                  <div className="mb-4">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Año
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        name="date"
-                        className={`form-datepicker w-full rounded border-[1.5px] ${
-                          errors.date
-                            ? "border-red-500 dark:border-red-500"
-                            : "border-stroke dark:border-form-strokedark"
-                        } bg-transparent  px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                        placeholder="mm/dd/yyyy"
-                        data-class="flatpickr-right"
-                        value={data.date ? data.date.split("T")[0] : ""}
-                        onChange={handleInputChange}
-                      />
-                      {errors.date && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.date}
-                        </p>
-                      )}
-                      <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center  bg-white shadow-default  dark:bg-form-input  my-4 z-10">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M15.7504 2.9812H14.2879V2.36245C14.2879 2.02495 14.0066 1.71558 13.641 1.71558C13.2754 1.71558 12.9941 1.99683 12.9941 2.36245V2.9812H4.97852V2.36245C4.97852 2.02495 4.69727 1.71558 4.33164 1.71558C3.96602 1.71558 3.68477 1.99683 3.68477 2.36245V2.9812H2.25039C1.29414 2.9812 0.478516 3.7687 0.478516 4.75308V14.5406C0.478516 15.4968 1.26602 16.3125 2.25039 16.3125H15.7504C16.7066 16.3125 17.5223 15.525 17.5223 14.5406V4.72495C17.5223 3.7687 16.7066 2.9812 15.7504 2.9812ZM1.77227 8.21245H4.16289V10.9968H1.77227V8.21245ZM5.42852 8.21245H8.38164V10.9968H5.42852V8.21245ZM8.38164 12.2625V15.0187H5.42852V12.2625H8.38164V12.2625ZM9.64727 12.2625H12.6004V15.0187H9.64727V12.2625ZM9.64727 10.9968V8.21245H12.6004V10.9968H9.64727ZM13.8379 8.21245H16.2285V10.9968H13.8379V8.21245ZM2.25039 4.24683H3.71289V4.83745C3.71289 5.17495 3.99414 5.48433 4.35977 5.48433C4.72539 5.48433 5.00664 5.20308 5.00664 4.83745V4.24683H13.0504V4.83745C13.0504 5.17495 13.3316 5.48433 13.6973 5.48433C14.0629 5.48433 14.3441 5.20308 14.3441 4.83745V4.24683H15.7504C16.0316 4.24683 16.2566 4.47183 16.2566 4.75308V6.94683H1.77227V4.75308C1.77227 4.47183 1.96914 4.24683 2.25039 4.24683ZM1.77227 14.5125V12.2343H4.16289V14.9906H2.25039C1.96914 15.0187 1.77227 14.7937 1.77227 14.5125ZM15.7504 15.0187H13.8379V12.2625H16.2285V14.5406C16.2566 14.7937 16.0316 15.0187 15.7504 15.0187Z"
-                            fill="#64748B"
-                          />
-                        </svg>{" "}
-                      </div>
-                    </div>{" "}
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="mb-4 w-3/5">
-                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                        DOI
+                  <div className="row flex gap-4">
+                    <div className="w-full mb-4.5">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Titulo
                       </label>
                       <input
-                        id="doi"
                         type="text"
+                        name="name"
+                        placeholder="Ingrese el titulo"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.name
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.name}
+                        onChange={handleInputChange}
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full mb-4.5">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Editor
+                      </label>
+                      <input
+                        type="text"
+                        name="editor"
+                        placeholder="Ingrese el titulo"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.editor
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.editor}
+                        onChange={handleInputChange}
+                      />
+                      {errors.editor && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.editor}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="row flex gap-4">
+                    <div className="mb-4.5 w-2/6">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Pdf
+                      </label>
+                      <input
+                        type="url"
+                        name="pdf"
+                        placeholder="Ingrese el enlace"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.pdf
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.pdf}
+                        onChange={handleInputChange}
+                      />
+                      {errors.pdf && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.pdf}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mb-4.5 w-2/6">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Doi
+                      </label>
+                      <input
+                        type="number"
                         name="doi"
+                        placeholder="DOI"
                         className={`w-full rounded border-[1.5px] ${
                           errors.doi
                             ? "border-red-500 dark:border-red-500"
@@ -358,39 +485,170 @@ const Articles = () => {
                         </p>
                       )}
                     </div>
-                    <div className="mb-4 w-2/5">
-                      <label className="block text-sm font-medium text-black dark:text-white">
-                        Estado
-                      </label>
-                      <select
-                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                        value={data.status ? "Activo" : "Inactivo"}
-                        onChange={handleInputChange}
-                      >
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                      </select>
-                    </div>{" "}
+                    <div className="row flex gap-4 w-2/6">
+                      <div className="w-full mb-4.5">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Tipo de artículo
+                        </label>
+
+                        <div className="relative z-20 bg-transparent dark:bg-form-input ">
+                          <select
+                            name="idNivel"
+                            value={data.idNivel}
+                            onChange={(e) => {
+                              setData((prevData) => ({
+                                ...prevData,
+                                idNivel: Number(e.target.value),
+                              }));
+                              setIsOptionSelected(true);
+                            }}
+                            className={`cursor-pointer ${
+                              errors.idNivel
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-stroke dark:border-form-strokedark"
+                            } relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+                              isOptionSelected
+                                ? "text-black dark:text-white"
+                                : ""
+                            }`}
+                          >
+                            <option
+                              value={1}
+                              className="text-body dark:text-bodydark"
+                            >
+                              Revista
+                            </option>
+                            <option
+                              value={2}
+                              className="text-body dark:text-bodydark"
+                            >
+                              Procides
+                            </option>
+                            <option
+                              value={3}
+                              className="text-body dark:text-bodydark"
+                            >
+                              Patentes
+                            </option>
+                          </select>
+
+                          <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                            <svg
+                              className="fill-current"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g opacity="0.8">
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                  fill=""
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="mb-4">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Enlace
-                    </label>
-                    <input
-                      id="link"
-                      type="text"
-                      name="link"
-                      className={`w-full rounded border-[1.5px] ${
-                        errors.link
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-stroke dark:border-form-strokedark"
-                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                      value={data.link}
-                      onChange={handleInputChange}
-                    />
-                    {errors.link && (
-                      <p className="text-red-500 text-sm mt-1">{errors.link}</p>
-                    )}
+                  <div className="row flex gap-4">
+                    <div className="w-full mb-4.5">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Seleccione el año
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          name="date"
+                          className={`form-datepicker w-full rounded border-[1.5px] ${
+                            errors.date
+                              ? "border-red-500 dark:border-red-500"
+                              : "border-stroke dark:border-form-strokedark"
+                          } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                          placeholder="mm/dd/yyyy"
+                          data-class="flatpickr-right"
+                          value={data.date}
+                          onChange={handleInputChange}
+                        />
+                        {errors.date && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.date}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-full mb-4.5">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Autores
+                      </label>
+                      <textarea
+                        rows={1}
+                        name="authors"
+                        placeholder="Ingrese los autores"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.authors
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.authors}
+                        onChange={handleInputChange}
+                      ></textarea>
+                      {errors.authors && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.authors}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="row flex gap-4">
+                    <div className="w-full mb-6">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Descripción
+                      </label>
+                      <textarea
+                        rows={2}
+                        name="description"
+                        placeholder="Ingrese una pequeña descripcion"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.description
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.description}
+                        onChange={handleInputChange}
+                      ></textarea>
+                      {errors.description && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.description}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full mb-6">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Resumen
+                      </label>
+                      <textarea
+                        rows={3}
+                        name="summary"
+                        placeholder="Ingrese una pequeña descripcion"
+                        className={`w-full rounded border-[1.5px] ${
+                          errors.summary
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-stroke dark:border-form-strokedark"
+                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                        value={data.summary}
+                        onChange={handleInputChange}
+                      ></textarea>{" "}
+                      {errors.summary && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.summary}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex justify-end mt-4">
@@ -420,6 +678,11 @@ const Articles = () => {
         theme="light"
         className={" z-9999"}
         transition={Bounce}
+      />
+      <ConfirmModal
+        isOpen={showModal}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
       />
     </>
   );

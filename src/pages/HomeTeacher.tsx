@@ -15,75 +15,7 @@ const iconMap: Record<IconKey, JSX.Element> = {
   ),
   ThumbsUp: <ThumbsUp className="text-primary dark:text-white" size={21} />,
 };
-////////////////////////////////////////////////////////////////
-const fetchedData: ReportData = {
-  user: {
-    name: "Docente Jhair",
-    profileImage:
-      "https://s3.abcstatics.com/media/summum/2021/10/01/maxi_iglesias-kU2E--1248x698@abc.jpeg",
-  },
-  stats: [
-    {
-      title: "Total de proyectos",
-      total: "12",
-      rate: "0.43%",
-      levelUp: true,
-      icon: "BookCopy",
-    },
-    {
-      title: "Total de artículos",
-      total: "21",
-      rate: "4.35%",
-      levelUp: true,
-      icon: "Newspaper",
-    },
-    {
-      title: "Últimos proyectos",
-      total: "2",
-      rate: "2.59%",
-      levelUp: true,
-      icon: "CalendarArrowUp",
-    },
-    {
-      title: "Total de likes",
-      total: "56",
-      rate: "0.95%",
-      levelUp: false,
-      icon: "ThumbsUp",
-    },
-  ],
-  grafico: {
-    series: [
-      {
-        name: "Proyectos",
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
-      },
-      {
-        name: "Artículos",
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      },
-    ],
-  },
-  tabla: [
-    {
-      name: "La inflación de marzo fue 7,7% según INDEC",
-      date: "12/12/2014",
-    },
-    {
-      name: "El equipo de básquet venció a Huracán",
-      date: "12/12/2014",
-    },
-    {
-      name: "El equipo de básquet venció a Huracán",
-      date: "12/12/2014",
-    },
-    {
-      name: "El equipo de básquet venció a Huracán",
-      date: "12/12/2014",
-    },
-  ],
-};
-////////////////////////////////////////////////////////////////
+
 const HomeTeacher: React.FC = () => {
   const userData = sessionStorage.getItem("userData");
   const user = userData ? JSON.parse(userData) : null;
@@ -93,12 +25,11 @@ const HomeTeacher: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(user.id)
         const data = await getReportTeacherById(user.id);
+        console.log(data)
         setData(data);
       } catch (err) {
-        ////////////////////////////////////////////////////////////////
-        setData(fetchedData);
-        ////////////////////////////////////////////////////////////////
         console.error("Error al obtener el reporte:", err);
       }
     };

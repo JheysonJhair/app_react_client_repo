@@ -164,7 +164,7 @@ export default function VerificationAccount() {
         });
         setTimeout(() => {
           navigate("/teacher/register", { state: { email } });
-        }, 2000);
+        }, 1500);
       } else {
         toast.error(response.message, {
           position: "top-right",

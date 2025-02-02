@@ -39,3 +39,21 @@ export const addTeacher = async (teacherData: ProfileTeacher): Promise<ApiRespon
     throw new Error("Error al crear docente");
   }
 };
+
+//---------------------------------------------------------------- UPDATE TEACHER
+export const updateTeacher = async (formData: FormData): Promise<ApiResponse<ProfileTeacher>> => {
+  try {
+    const { data } = await axios.put<ApiResponse<ProfileTeacher>>(
+      `${import.meta.env.VITE_API_URL}/Teacher/UpdateTeacher`,
+      formData, 
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", 
+        }
+      }
+    );
+    return data;
+  } catch (error) {
+    throw new Error("Error al actualizar docente");
+  }
+};

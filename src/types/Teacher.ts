@@ -1,5 +1,5 @@
 export interface TeacherDto {
-    idTeacher?: number;
+    id?: number;
     firstName: string;
     lastName: string;
     gender:boolean;
@@ -24,18 +24,20 @@ export interface TeacherDto {
     jobDescription: string;
     jobIdi: string;
     startDate: string;
-    endDate?: string;
+    endDate: string;
     isCurrent:boolean;
+    teacherId?: number
   }
   
   export interface ExperienceTeacher {
     id?: number;
     institution: string;
-    institutionType: string;
-    teacherType: string;
+    institutionType: number;
+    teacherType: number;
     jobDescription: string;
     startDate: string;
-    endDate?: string;
+    endDate: string;
+    teacherId?: number
   }
   
   export interface ExperienceThesisAdvisor {

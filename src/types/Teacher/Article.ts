@@ -1,11 +1,13 @@
 export interface Article {
   id?:number;
-  title: string;
-  link: string;
-  doi: string;
-  articleType?: number;
+  idTeacher?:number
+  name: string;
+  description: string;
+  summary: string;
   date: string;
-  status: number;
-  description?: string;
-  summary?: string;
+  doi: string;
+  authors: string;
+  pdf:string;
+  editor: string;
+  idNivel: number;
 }

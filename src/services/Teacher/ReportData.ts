@@ -6,7 +6,7 @@ import { ReportData } from "../../types/Teacher/Home";
 export const getReportTeacherById = async (id: number): Promise<ReportData> => {
   try {
     const { data } = await axios.get<ApiResponse<ReportData>>(
-      `${import.meta.env.VITE_API_URL}/Report/GetById/${id}`
+      `${import.meta.env.VITE_API_URL}/Teacher/Dashboard/${id}`
     );
     return data.data; 
   } catch (error) {

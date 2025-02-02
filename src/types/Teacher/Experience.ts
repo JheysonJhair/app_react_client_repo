@@ -1,28 +1,32 @@
 export interface ExperienceLaboral {
   id?: number;
-  institution: string;
-  Charge: string;
-  descriptionJob: string;
-  idiCharge: string;
-  startDate: string;
-  endDate: string;
+  companyName: string,
+  position: string,
+  jobDescription: string,
+  jobIdi: string,
+  startDate:string,
+  endDate:string,
+  isCurrent: boolean,
+  teacherId?: number
 }
 
 export interface ExperienceLaboralDocente {
   id?: number;
-  institution: string;
-  typeInstitution: number;
-  typeTeacher: number;
-  descriptionJob: string;
-  startDate: string;
-  endDate: string;
+  institution: string,
+  institutionType: number,
+  teacherType: number,
+  jobDescription: string,
+  startDate: string,
+  endDate: string,
+  teacherId?:number
 }
 
 export interface ExperienceTesis {
   id?: number;
-  university: string;
-  thesis: string;
-  thesisStudent: string;
-  repository: string;
-  acceptanceDate: string;
+  university: string,
+  thesis: string,
+  thesisStudent: string,
+  repository: string,
+  thesisAcceptanceDate:string,
+  teacherId?: number
 }

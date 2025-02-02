@@ -12,7 +12,7 @@ export const createExperienceLaboral = async (
 ): Promise<ApiResponse<ExperienceLaboral>> => {
   try {
     const { data } = await axios.post<ApiResponse<ExperienceLaboral>>(
-      `${import.meta.env.VITE_API_URL}/Experience/Create`,
+      `${import.meta.env.VITE_API_URL}/Teacher/CreateWorkExperience`,
       experiencia
     );
     return data;
@@ -43,7 +43,7 @@ export const createExperienceLaboralDocente = async (
 ): Promise<ApiResponse<ExperienceLaboralDocente>> => {
   try {
     const { data } = await axios.post<ApiResponse<ExperienceLaboralDocente>>(
-      `${import.meta.env.VITE_API_URL}/Experience/Create`,
+      `${import.meta.env.VITE_API_URL}/Teacher/CreateTeachingExperience`,
       experiencia
     );
     return data;
@@ -58,7 +58,7 @@ export const createExperienceTesis = async (
 ): Promise<ApiResponse<ExperienceTesis>> => {
   try {
     const { data } = await axios.post<ApiResponse<ExperienceTesis>>(
-      `${import.meta.env.VITE_API_URL}/Experience/Create`,
+      `${import.meta.env.VITE_API_URL}/Teacher/CreateThesisAdvisingExperience`,
       experiencia
     );
     return data;

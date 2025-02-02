@@ -15,6 +15,9 @@ import { updateExperienceLaboral } from "../../services/Teacher/Experience";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 
 const Experience = () => {
+  const userData = sessionStorage.getItem("userData");
+  const user = userData ? JSON.parse(userData) : null;
+
   const [docente, setDocente] = useState<TeacherDto | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
@@ -36,7 +39,7 @@ const Experience = () => {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const fetchedTeacher = await getTeacherById(1);
+        const fetchedTeacher = await getTeacherById(user.idTeacher);
         setDocente(fetchedTeacher);
       } catch (error) {
         console.error("Error al obtener el docente:", error);

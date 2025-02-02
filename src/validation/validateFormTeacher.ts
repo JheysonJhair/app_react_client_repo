@@ -44,14 +44,24 @@ export const validateForm = (formData: ProfileTeacherRegister) => {
   }
 
 
+  // if (!formData.mail.trim()) {
+  //   tempErrors.mail = "El correo electrónico es requerido.";
+  //   isValid = false;
+  // }else if (!/^[a-zA-Z._-]+@unamba\.edu\.pe$/.test(formData.mail)) {
+  //   tempErrors.mail = "El correo electrónico no es válido.";
+  //   isValid = false;
+  // }
+
   if (!formData.mail.trim()) {
     tempErrors.mail = "El correo electrónico es requerido.";
     isValid = false;
-  }else if (!/^[a-zA-Z._-]+@unamba\.edu\.pe$/.test(formData.mail)) {
+  }else if (! /^[a-zA-Z0-9._-]+@unamba\.edu\.pe$/.test(formData.mail)) {
     tempErrors.mail = "El correo electrónico no es válido.";
     isValid = false;
   }
 
+
+ 
   if (!formData.concytec?.trim()) {
     tempErrors.concytec = "El código CONCYTEC es requerido.";
     isValid = false;

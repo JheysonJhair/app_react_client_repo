@@ -19,45 +19,51 @@ import {
 } from "../../services/Teacher/Experience";
 
 const CreateExperience = () => {
+  const userData = sessionStorage.getItem("userData");
+  const user = userData ? JSON.parse(userData) : null;
+
+  const [isOptionSelectedLaboralActual, setIsOptionLaboralActual] =
+    useState<boolean>(false);
   const [dataLaboral, setDataLaboral] = useState<ExperienceLaboral>({
-    institution: "",
-    Charge: "",
-    descriptionJob: "",
-    idiCharge: "",
+    companyName: "",
+    position: "",
+    jobDescription: "",
+    jobIdi: "",
     startDate: "",
     endDate: "",
+    isCurrent: false,
+    teacherId: user.idTeacher,
   });
 
   const [errorsLaboral, setErrorsLaboral] = useState<Record<string, string>>({
-    institution: "",
-    Charge: "",
-    descriptionJob: "",
-    idiCharge: "",
+    companyName: "",
+    position: "",
+    jobDescription: "",
+    jobIdi: "",
     startDate: "",
     endDate: "",
+    isCurrent: "",
   });
 
-  const [isOptionSelectedTipoInstitucion, setIsOptionTipoInstitucion] =
-    useState<boolean>(false);
-  const [isOptionSelectedTipoDocente, setIsOptionTipoDocente] =
-    useState<boolean>(false);
+
   const [dataLaboralDocente, setDataLaboralDocente] =
     useState<ExperienceLaboralDocente>({
       institution: "",
-      typeInstitution: 0,
-      typeTeacher: 0,
-      descriptionJob: "",
+      institutionType: 0,
+      teacherType: 0,
+      jobDescription: "",
       startDate: "",
       endDate: "",
+      teacherId: user.idTeacher,
     });
 
   const [errorsLaboralDocente, setErrorsLaboralDocente] = useState<
     Record<string, string>
   >({
     institution: "",
-    typeInstitution: "",
-    typeTeacher: "",
-    descriptionJob: "",
+    institutionType: "",
+    teacherType: "",
+    jobDescription: "",
     startDate: "",
     endDate: "",
   });
@@ -67,7 +73,8 @@ const CreateExperience = () => {
     thesis: "",
     thesisStudent: "",
     repository: "",
-    acceptanceDate: "",
+    thesisAcceptanceDate: "",
+    teacherId: user.idTeacher,
   });
 
   const [errorsTesis, setErrorsTesis] = useState<Record<string, string>>({
@@ -75,7 +82,7 @@ const CreateExperience = () => {
     thesis: "",
     thesisStudent: "",
     repository: "",
-    acceptanceDate: "",
+    thesisAcceptanceDate: "",
   });
 
   //---------------------------------------------------------------- LABORAL
@@ -110,6 +117,7 @@ const CreateExperience = () => {
 
     if (isValid) {
       try {
+        console.log(dataLaboral);
         const response = await createExperienceLaboral(dataLaboral);
 
         if (response.success) {
@@ -124,8 +132,26 @@ const CreateExperience = () => {
             theme: "light",
             transition: Bounce,
           });
+          setDataLaboral({
+            companyName: "",
+            position: "",
+            jobDescription: "",
+            jobIdi: "",
+            startDate: "",
+            endDate: "",
+            isCurrent: false,
+          });
+          setErrorsLaboral({
+            companyName: "",
+            position: "",
+            jobDescription: "",
+            jobIdi: "",
+            startDate: "",
+            endDate: "",
+            isCurrent: "",
+          });
         } else {
-          toast.error("Erro de backend", {
+          toast.error(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -171,7 +197,7 @@ const CreateExperience = () => {
       [name]: value,
     });
 
-    setErrorsLaboral((prevErrors) => ({
+    setErrorsLaboralDocente((prevErrors) => ({
       ...prevErrors,
       [name]: tempErrors[name],
     }));
@@ -186,6 +212,7 @@ const CreateExperience = () => {
 
     if (isValid) {
       try {
+        console.log(dataLaboralDocente);
         const response = await createExperienceLaboralDocente(
           dataLaboralDocente
         );
@@ -202,8 +229,24 @@ const CreateExperience = () => {
             theme: "light",
             transition: Bounce,
           });
+          setDataLaboralDocente({
+            institution: "",
+            institutionType: 0,
+            teacherType: 0,
+            jobDescription: "",
+            startDate: "",
+            endDate: "",
+          });
+          setErrorsLaboralDocente({
+            institution: "",
+            institutionType: "",
+            teacherType: "",
+            jobDescription: "",
+            startDate: "",
+            endDate: "",
+          });
         } else {
-          toast.error("Erro de backend", {
+          toast.error(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -231,7 +274,7 @@ const CreateExperience = () => {
     }
   };
 
-  //---------------------------------------------------------------- LABORAL
+  //---------------------------------------------------------------- TESIS
   const handleInputChangeTesis = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -263,6 +306,7 @@ const CreateExperience = () => {
 
     if (isValid) {
       try {
+        console.log(dataTesis);
         const response = await createExperienceTesis(dataTesis);
 
         if (response.success) {
@@ -277,8 +321,22 @@ const CreateExperience = () => {
             theme: "light",
             transition: Bounce,
           });
+          setDataTesis({
+            university: "",
+            thesis: "",
+            thesisStudent: "",
+            repository: "",
+            thesisAcceptanceDate: "",
+          });
+          setErrorsTesis({
+            university: "",
+            thesis: "",
+            thesisStudent: "",
+            repository: "",
+            thesisAcceptanceDate: "",
+          });
         } else {
-          toast.error("Erro de backend", {
+          toast.error(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -320,25 +378,87 @@ const CreateExperience = () => {
             </div>
             <form onSubmit={handleSubmitLaboral}>
               <div className="p-6.5">
+                <div className="w-full mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Trabajo actual
+                  </label>
+
+                  <div className="relative z-20 bg-transparent dark:bg-form-input">
+                    <select
+                      value={dataLaboral.isCurrent ? "true" : "false"}
+                      name="isCurrent"
+                      onChange={(e) => {
+                        setDataLaboral((prevData) => ({
+                          ...prevData,
+                          isCurrent: e.target.value === "true",
+                        }));
+                        setIsOptionLaboralActual(true);
+                      }}
+                      className={`cursor-pointer ${
+                        errorsLaboral.isCurrent
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-stroke dark:border-form-strokedark"
+                      } relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+                        isOptionSelectedLaboralActual
+                          ? "text-black dark:text-white"
+                          : ""
+                      }`}
+                    >
+                      <option
+                        value="false"
+                        className="text-body dark:text-bodydark"
+                      >
+                        No
+                      </option>
+                      <option
+                        value="true"
+                        className="text-body dark:text-bodydark"
+                      >
+                        Sí
+                      </option>
+                    </select>
+
+                    <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                      <svg
+                        className="fill-current"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g opacity="0.8">
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                            fill=""
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
                     Institución
                   </label>
                   <input
                     type="text"
-                    name="institution"
+                    name="companyName"
                     placeholder="Ingrese el titulo"
                     className={`w-full rounded border-[1.5px] ${
-                      errorsLaboral.institution
+                      errorsLaboral.companyName
                         ? "border-red-500 dark:border-red-500"
                         : "border-stroke dark:border-form-strokedark"
                     } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={dataLaboral.institution}
+                    value={dataLaboral.companyName}
                     onChange={handleInputChangeLaboral}
                   />
-                  {errorsLaboral.institution && (
+                  {errorsLaboral.companyName && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboral.institution}
+                      {errorsLaboral.companyName}
                     </p>
                   )}
                 </div>
@@ -349,19 +469,19 @@ const CreateExperience = () => {
                   </label>
                   <input
                     type="text"
-                    name="Charge"
+                    name="position"
                     placeholder="Ingrese el enlace"
                     className={`w-full rounded border-[1.5px] ${
-                      errorsLaboral.Charge
+                      errorsLaboral.position
                         ? "border-red-500 dark:border-red-500"
                         : "border-stroke dark:border-form-strokedark"
                     } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={dataLaboral.Charge}
+                    value={dataLaboral.position}
                     onChange={handleInputChangeLaboral}
                   />
-                  {errorsLaboral.Charge && (
+                  {errorsLaboral.position && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboral.Charge}
+                      {errorsLaboral.position}
                     </p>
                   )}
                 </div>
@@ -372,19 +492,19 @@ const CreateExperience = () => {
                   </label>
                   <textarea
                     rows={2}
-                    name="descriptionJob"
+                    name="jobDescription"
                     placeholder="Ingrese una pequeña descripcion"
                     className={`w-full rounded border-[1.5px] ${
-                      errorsLaboral.descriptionJob
+                      errorsLaboral.jobDescription
                         ? "border-red-500 dark:border-red-500"
                         : "border-stroke dark:border-form-strokedark"
                     } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={dataLaboral.descriptionJob}
+                    value={dataLaboral.jobDescription}
                     onChange={handleInputChangeLaboral}
                   ></textarea>
-                  {errorsLaboral.descriptionJob && (
+                  {errorsLaboral.jobDescription && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboral.descriptionJob}
+                      {errorsLaboral.jobDescription}
                     </p>
                   )}
                 </div>
@@ -395,19 +515,19 @@ const CreateExperience = () => {
                   </label>
                   <input
                     type="text"
-                    name="idiCharge"
+                    name="jobIdi"
                     placeholder="Ingrese el enlace"
                     className={`w-full rounded border-[1.5px] ${
-                      errorsLaboral.idiCharge
+                      errorsLaboral.jobIdi
                         ? "border-red-500 dark:border-red-500"
                         : "border-stroke dark:border-form-strokedark"
                     } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={dataLaboral.idiCharge}
+                    value={dataLaboral.jobIdi}
                     onChange={handleInputChangeLaboral}
                   />
-                  {errorsLaboral.idiCharge && (
+                  {errorsLaboral.jobIdi && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboral.idiCharge}
+                      {errorsLaboral.jobIdi}
                     </p>
                   )}
                 </div>
@@ -490,7 +610,7 @@ const CreateExperience = () => {
                   </label>
                   <input
                     type="text"
-                    name="title"
+                    name="institution"
                     placeholder="Ingrese el titulo"
                     className={`w-full rounded border-[1.5px] ${
                       errorsLaboralDocente.institution
@@ -509,41 +629,39 @@ const CreateExperience = () => {
 
                 <div className="w-full mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
-                    Tipo de Institución
+                    Tipo de Institucion
                   </label>
 
                   <div className="relative z-20 bg-transparent dark:bg-form-input">
                     <select
-                      value={dataLaboralDocente.typeInstitution}
-                      name="typeInstitution"
-                      onChange={(e) => {
-                        setDataLaboralDocente((prevData) => ({
-                          ...prevData,
-                          typeInstitution: Number(e.target.value),
-                        }));
-                        setIsOptionTipoInstitucion(true);
-                      }}
-                      className={`cursor-pointer ${
-                        errorsLaboralDocente.typeInstitution
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-stroke dark:border-form-strokedark"
-                      } relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
-                        isOptionSelectedTipoInstitucion
-                          ? "text-black dark:text-white"
-                          : ""
-                      }`}
+                      value={dataLaboralDocente.institutionType}
+                      name="institutionType"
+                      onChange={handleInputChangeLaboralDocente}
+                      className={`cursor-pointer 
+                                ${
+                                  errorsLaboralDocente.institutionType
+                                    ? "border-red-500"
+                                    : "border-stroke"
+                                } // Borde normal en modo claro
+                                dark:${
+                                  errorsLaboralDocente.institutionType
+                                    ? "border-red-500"
+                                    : "border-form-strokedark"
+                                } // Borde rojo en modo oscuro
+                                relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                     >
+                      <option value={0}>Seleccione tipo de institucion</option>
                       <option
                         value={1}
                         className="text-body dark:text-bodydark"
                       >
-                        Terminado
+                        institucion 1
                       </option>
                       <option
                         value={2}
                         className="text-body dark:text-bodydark"
                       >
-                        En proceso
+                        institucion 2
                       </option>
                     </select>
 
@@ -567,6 +685,11 @@ const CreateExperience = () => {
                       </svg>
                     </span>
                   </div>
+                  {errorsLaboralDocente.institution && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsLaboralDocente.institution}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -575,36 +698,34 @@ const CreateExperience = () => {
 
                   <div className="relative z-20 bg-transparent dark:bg-form-input">
                     <select
-                      value={dataLaboralDocente.typeTeacher}
-                      name="typeTeacher"
-                      onChange={(e) => {
-                        setDataLaboralDocente((prevData) => ({
-                          ...prevData,
-                          typeTeacher: Number(e.target.value),
-                        }));
-                        setIsOptionTipoDocente(true);
-                      }}
-                      className={`cursor-pointer ${
-                        errorsLaboralDocente.typeTeacher
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-stroke dark:border-form-strokedark"
-                      } relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
-                        isOptionSelectedTipoDocente
-                          ? "text-black dark:text-white"
-                          : ""
-                      }`}
+                      value={dataLaboralDocente.teacherType}
+                      name="teacherType"
+                      onChange={handleInputChangeLaboralDocente}
+                      className={`cursor-pointer 
+                                ${
+                                  errorsLaboralDocente.teacherType
+                                    ? "border-red-500"
+                                    : "border-stroke"
+                                } // Borde normal en modo claro
+                                dark:${
+                                  errorsLaboralDocente.teacherType
+                                    ? "border-red-500"
+                                    : "border-form-strokedark"
+                                } // Borde rojo en modo oscuro
+                                relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                     >
+                      <option value={0}>Seleccione tipo de docente</option>
                       <option
                         value={1}
                         className="text-body dark:text-bodydark"
                       >
-                        Terminado
+                        Docente 1
                       </option>
                       <option
                         value={2}
                         className="text-body dark:text-bodydark"
                       >
-                        En proceso
+                        Docente 2
                       </option>
                     </select>
 
@@ -628,6 +749,11 @@ const CreateExperience = () => {
                       </svg>
                     </span>
                   </div>
+                  {errorsLaboralDocente.institution && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsLaboralDocente.institution}
+                    </p>
+                  )}
                 </div>
                 <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -635,19 +761,19 @@ const CreateExperience = () => {
                   </label>
                   <textarea
                     rows={2}
-                    name="descriptionJob"
-                    placeholder="Ingrese una pequeña descripcion"
+                    name="jobDescription"
+                    placeholder="Ingrese una  descripcion"
                     className={`w-full rounded border-[1.5px] ${
-                      errorsLaboralDocente.descriptionJob
+                      errorsLaboralDocente.jobDescription
                         ? "border-red-500 dark:border-red-500"
                         : "border-stroke dark:border-form-strokedark"
                     } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={dataLaboralDocente.descriptionJob}
+                    value={dataLaboralDocente.jobDescription}
                     onChange={handleInputChangeLaboralDocente}
                   ></textarea>
-                  {errorsLaboralDocente.descriptionJob && (
+                  {errorsLaboralDocente.jobDescription && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboralDocente.descriptionJob}
+                      {errorsLaboralDocente.jobDescription}
                     </p>
                   )}
                 </div>
@@ -741,7 +867,9 @@ const CreateExperience = () => {
                     onChange={handleInputChangeTesis}
                   />
                   {errorsTesis.university && (
-                    <p className="text-red-500 text-sm mt-1">{errorsTesis.university}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsTesis.university}
+                    </p>
                   )}
                 </div>
 
@@ -762,7 +890,9 @@ const CreateExperience = () => {
                     onChange={handleInputChangeTesis}
                   />
                   {errorsTesis.thesis && (
-                    <p className="text-red-500 text-sm mt-1">{errorsTesis.thesis}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsTesis.thesis}
+                    </p>
                   )}
                 </div>
 
@@ -806,7 +936,9 @@ const CreateExperience = () => {
                     onChange={handleInputChangeTesis}
                   />
                   {errorsTesis.repository && (
-                    <p className="text-red-500 text-sm mt-1">{errorsTesis.repository}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorsTesis.repository}
+                    </p>
                   )}
                 </div>
 
@@ -817,19 +949,21 @@ const CreateExperience = () => {
                   <div className="relative">
                     <input
                       type="date"
-                      name="acceptanceDate"
+                      name="thesisAcceptanceDate"
                       className={`form-datepicker w-full rounded border-[1.5px] ${
-                        errorsTesis.acceptanceDate
+                        errorsTesis.thesisAcceptanceDate
                           ? "border-red-500 dark:border-red-500"
                           : "border-stroke dark:border-form-strokedark"
                       } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                       placeholder="mm/dd/yyyy"
                       data-class="flatpickr-right"
-                      value={dataTesis.acceptanceDate}
+                      value={dataTesis.thesisAcceptanceDate}
                       onChange={handleInputChangeTesis}
                     />
-                    {errorsTesis.acceptanceDate && (
-                      <p className="text-red-500 text-sm mt-1">{errorsTesis.acceptanceDate}</p>
+                    {errorsTesis.thesisAcceptanceDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errorsTesis.thesisAcceptanceDate}
+                      </p>
                     )}
                   </div>
                 </div>

@@ -8,27 +8,27 @@ export const validateFormLaboral = (data: ExperienceLaboral) => {
   let tempErrors: Record<string, string> = {};
   let isValid = true;
 
-  if (!data.institution.trim()) {
-    tempErrors.institution = "La institución es requerida.";
+  if (!data.companyName.trim()) {
+    tempErrors.companyName = "La institución es requerida.";
     isValid = false;
   }
 
-  if (!data.Charge.trim()) {
-    tempErrors.Charge = "El cargo es requerido.";
+  if (!data.position.trim()) {
+    tempErrors.position = "El cargo es requerido.";
     isValid = false;
   }
 
-  if (!data.descriptionJob.trim()) {
-    tempErrors.descriptionJob = "La descripción del trabajo es requerida.";
+  if (!data.jobDescription.trim()) {
+    tempErrors.jobDescription = "La descripción del trabajo es requerida.";
     isValid = false;
-  } else if (data.descriptionJob.length < 10) {
-    tempErrors.descriptionJob =
+  } else if (data.jobDescription.length < 10) {
+    tempErrors.jobDescription =
       "La descripción del trabajo debe tener al menos 10 caracteres.";
     isValid = false;
   }
 
-  if (!data.idiCharge.trim()) {
-    tempErrors.idiCharge = "El identificador del cargo es requerido.";
+  if (!data.jobIdi.trim()) {
+    tempErrors.jobIdi = "El identificador del cargo es requerido.";
     isValid = false;
   }
 
@@ -54,27 +54,27 @@ export const validateFormLaboralDocente = (data: ExperienceLaboralDocente) => {
     isValid = false;
   }
 
-  if (!data.typeInstitution) {
-    tempErrors.typeInstitution = "El tipo de institución es requerido.";
+  if (!data.jobDescription.trim()) {
+    tempErrors.jobDescription = "La descripción del trabajo es requerida.";
     isValid = false;
-  }
-
-  if (!data.typeTeacher) {
-    tempErrors.typeTeacher = "El tipo de docente es requerido.";
-    isValid = false;
-  }
-
-  if (!data.descriptionJob.trim()) {
-    tempErrors.descriptionJob = "La descripción del trabajo es requerida.";
-    isValid = false;
-  } else if (data.descriptionJob.length < 10) {
-    tempErrors.descriptionJob =
+  } else if (data.jobDescription.length < 10) {
+    tempErrors.jobDescription =
       "La descripción del trabajo debe tener al menos 10 caracteres.";
     isValid = false;
   }
 
   if (!data.startDate.trim()) {
     tempErrors.startDate = "La fecha de inicio es requerida.";
+    isValid = false;
+  }
+
+  if (data.teacherType === 0) {
+    tempErrors.teacherType = "El tipo de docente es requerido.";
+    isValid = false;
+  }
+
+  if (data.institutionType === 0) {
+    tempErrors.institutionType = "El tipo de insitucion es requerido.";
     isValid = false;
   }
 
@@ -119,8 +119,8 @@ export const validateFormTesis = (data: ExperienceTesis) => {
     isValid = false;
   }
 
-  if (!data.acceptanceDate.trim()) {
-    tempErrors.acceptanceDate = "La fecha de aceptación es requerida.";
+  if (!data.thesisAcceptanceDate.trim()) {
+    tempErrors.thesisAcceptanceDate = "La fecha de aceptación es requerida.";
     isValid = false;
   }
 

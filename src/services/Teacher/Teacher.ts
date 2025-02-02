@@ -28,10 +28,10 @@ export const getTeacherById = async (id: number): Promise<TeacherDto> => {
 };
 
 //---------------------------------------------------------------- CREATE TEACHER
-export const createTeacher = async (teacherData: ProfileTeacher): Promise<ApiResponse<ProfileTeacher>> => {
+export const addTeacher = async (teacherData: ProfileTeacher): Promise<ApiResponse<ProfileTeacher>> => {
   try {
     const { data } = await axios.post<ApiResponse<ProfileTeacher>>(
-      `${import.meta.env.VITE_API_URL}/Teacher/Create`, 
+      `${import.meta.env.VITE_API_URL}/Teacher/AddTeacher`, 
       teacherData
     );
     return data; 

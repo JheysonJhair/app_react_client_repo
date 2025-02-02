@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoDark from "../../assets/img/logo_universidad.png";
 import LogoAuth from "../../assets/svg/auth.svg";
 import { LockKeyhole, Mail, User, IdCard, Building2 } from "lucide-react";
 import { ProfileTeacherRegister } from "../../types/Teacher/Teacher";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import { validateForm } from "../../validation/validateFormTeacher";
-import { createTeacher } from "../../services/Teacher/Teacher";
+import { addTeacher } from "../../services/Teacher/Teacher";
 
 const TeacherRegister: React.FC = () => {
   const location = useLocation();
   const email = location.state?.email || "";
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<ProfileTeacherRegister>({
     firstName: "",
@@ -74,7 +75,7 @@ const TeacherRegister: React.FC = () => {
     if (isValid) {
       try {
         const { confirmPassword, ...dataToSend } = formData;
-        const response = await createTeacher(dataToSend);
+        const response = await addTeacher(dataToSend);
 
         if (response.success) {
           toast.success(response.message, {
@@ -88,6 +89,9 @@ const TeacherRegister: React.FC = () => {
             theme: "light",
             transition: Bounce,
           });
+          setTimeout(() => {
+            navigate("/teacher/login");
+          }, 1000);
         } else {
           toast.error("Erro de backend", {
             position: "top-right",

@@ -27,12 +27,12 @@ const Articles = () => {
   };
   const [articles, setArticles] = useState<Article[]>([]);
 
-console.log(articles)
   const [filterStatus, setFilterStatus] = useState<number | null>(null);
 
-  const filteredArticles = filterStatus !== null
-    ? articles.filter((article) => article.estatus === filterStatus)
-    : articles;
+  const filteredArticles =
+    filterStatus !== null
+      ? articles.filter((article) => article.estatus === filterStatus)
+      : articles;
 
   //---------------------------------------------------------------- GET ALL
 
@@ -248,27 +248,31 @@ console.log(articles)
     <>
       <Breadcrumb pageName="Artículos" />
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className="flex justify-end space-x-4 mb-4">
-        <button
-          className={`px-4 py-2 rounded ${filterStatus == 1 ? "bg-green-600 text-white" : "bg-gray-300"}`}
-          onClick={() => setFilterStatus(1)}
-        >
-          Publicados
-        </button>
-        <button
-          className={`px-4 py-2 rounded ${filterStatus == 0 ? "bg-yellow-600 text-white" : "bg-gray-300"}`}
-          onClick={() => setFilterStatus(0)}
-        >
-          En Proceso
-        </button>
-        <button
-          className="px-4 py-2 rounded bg-blue-600 text-white"
-          onClick={() => setFilterStatus(null)}
-        >
-          Todos
-        </button>
-      </div>
-       <div className="max-w-full overflow-x-auto">
+        <div className="flex justify-end space-x-4 mb-4">
+          <button
+            className={`px-4 py-2 rounded ${
+              filterStatus == 1 ? "bg-green-600 text-white" : "bg-gray-300"
+            }`}
+            onClick={() => setFilterStatus(1)}
+          >
+            Publicados
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${
+              filterStatus == 0 ? "bg-yellow-600 text-white" : "bg-gray-300"
+            }`}
+            onClick={() => setFilterStatus(0)}
+          >
+            En Proceso
+          </button>
+          <button
+            className="px-4 py-2 rounded bg-blue-600 text-white"
+            onClick={() => setFilterStatus(null)}
+          >
+            Todos
+          </button>
+        </div>
+        <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -311,17 +315,23 @@ console.log(articles)
                   <tr key={index}>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.name.length > 5 ? article.name.slice(0, 5) + "..." : article.name}
+                        {article.name.length > 5
+                          ? article.name.slice(0, 5) + "..."
+                          : article.name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.description.length > 5 ? article.description.slice(0, 5) + "..." : article.description}
+                        {article.description.length > 5
+                          ? article.description.slice(0, 5) + "..."
+                          : article.description}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.summary.length > 5 ? article.summary.slice(0, 5) + "..." : article.summary}
+                        {article.summary.length > 5
+                          ? article.summary.slice(0, 5) + "..."
+                          : article.summary}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
@@ -330,28 +340,47 @@ console.log(articles)
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
-                      <p className="text-black dark:text-white">{article.doi}</p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">{article.authors}</p>
+                      <p className="text-black dark:text-white">
+                        {article.doi}
+                      </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {article.pdf.length > 5 ? article.pdf.slice(0, 5) + "..." : article.pdf}
+                        {article.authors.length > 5
+                          ? article.authors.slice(0, 5) + "..."
+                          : article.authors}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {article.pdf.length > 5
+                          ? article.pdf.slice(0, 5) + "..."
+                          : article.pdf}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p
                         className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                          article.estatus === 0 ? "bg-yellow-500 text-yellow-700" : "bg-green-500 text-green-700"
+                          article.estatus === 0
+                            ? "bg-yellow-500 text-yellow-700"
+                            : "bg-green-500 text-green-700"
                         }`}
                       >
                         {article.estatus === 0 ? "En Proceso" : "Publicado"}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">{article.idNivel}</p>
+                      <p className="text-black dark:text-white">
+                        {article.idNivel === 0
+                          ? "Revista"
+                          : article.idNivel === 1
+                          ? "Procidis"
+                          : article.idNivel === 2
+                          ? "Patentes"
+                          : "Desconocido"}
+                      </p>
                     </td>
+
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button className="hover:text-primary">
@@ -368,7 +397,10 @@ console.log(articles)
                             setDeleteId(article.id);
                           }}
                         >
-                          <Trash2 className="text-primary dark:text-white" size={21} />
+                          <Trash2
+                            className="text-primary dark:text-white"
+                            size={21}
+                          />
                         </button>
                       </div>
                     </td>
@@ -376,7 +408,10 @@ console.log(articles)
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="py-5 px-4 text-center text-gray-500 dark:text-gray-400">
+                  <td
+                    colSpan={10}
+                    className="py-5 px-4 text-center text-gray-500 dark:text-gray-400"
+                  >
                     No hay artículos
                   </td>
                 </tr>
@@ -565,7 +600,7 @@ console.log(articles)
                               value={1}
                               className="text-body dark:text-bodydark"
                             >
-                              Procides
+                              Procidis
                             </option>
                             <option
                               value={2}

@@ -2,29 +2,36 @@ import axios from "axios";
 import { ApiResponse } from "../../types/Response/ApiResponse";
 import { Formation } from "../../types/Teacher/FormationAcademic";
 
-
-//---------------------------------------------------------------- GET ARTICLE BY TEACHER ID
-export const getFormationByTeacherId = async (
+//---------------------------------------------------------------- GET FORMATION
+export const getFormationsByTeacherId = async (
   teacherId: number
 ): Promise<Formation[]> => {
   try {
     const { data } = await axios.get<ApiResponse<Formation[]>>(
-      `${import.meta.env.VITE_API_URL}/Teacher/GetEducationFormationById/${teacherId}`
+      `${
+        import.meta.env.VITE_API_URL
+      }/Teacher/GetAllEducationFormationsByTeacherId/${teacherId}`
     );
-    return data.data;
+
+    if (data.success) {
+      return data.data;
+    } else {
+      console.error("Error en la respuesta de la API:", data.message);
+      return [];
+    }
   } catch (error) {
-    throw new Error("Error al obtener la formacion del docente");
+    console.error("Error al obtener las formaciones:", error);
+    return [];
   }
 };
 
-
-//---------------------------------------------------------------- CREATE ARTICLE
+//---------------------------------------------------------------- CREATE FORMATION
 export const createFormationDocente = async (
   article: Formation
 ): Promise<ApiResponse<Formation>> => {
   try {
     const { data } = await axios.post<ApiResponse<Formation>>(
-      `${import.meta.env.VITE_API_URL}/Research/CreateScientificArticle`,
+      `${import.meta.env.VITE_API_URL}/Teacher/CreateEducationFormation`,
       article
     );
     return data;
@@ -33,15 +40,13 @@ export const createFormationDocente = async (
   }
 };
 
-
-
-//---------------------------------------------------------------- UPDATE ARTICLE
+//---------------------------------------------------------------- UPDATE FORMATION
 export const updateFormationDocente = async (
   article: Formation
 ): Promise<ApiResponse<Formation>> => {
   try {
     const { data } = await axios.put<ApiResponse<Formation>>(
-      `${import.meta.env.VITE_API_URL}/Research/UpdateScientificFormation`,
+      `${import.meta.env.VITE_API_URL}/Teacher/UpdateEducationFormation`,
       article
     );
     return data;
@@ -50,13 +55,13 @@ export const updateFormationDocente = async (
   }
 };
 
-//---------------------------------------------------------------- DELETE ARTICLE
+//---------------------------------------------------------------- DELETE FORMATION
 export const deleteFormationDocente = async (
   id: string
 ): Promise<ApiResponse<null>> => {
   try {
     const { data } = await axios.delete<ApiResponse<null>>(
-      `${import.meta.env.VITE_API_URL}/Research/DeleteScientificArticle/${id}`
+      `${import.meta.env.VITE_API_URL}/Teacher/DeleteEducationFormation/${id}`
     );
     return data;
   } catch (error) {

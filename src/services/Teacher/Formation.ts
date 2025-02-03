@@ -4,7 +4,7 @@ import { Formation } from "../../types/Teacher/FormationAcademic";
 
 //---------------------------------------------------------------- GET FORMATION
 export const getFormationsByTeacherId = async (
-  teacherId: number
+  teacherId: any
 ): Promise<Formation[]> => {
   try {
     const { data } = await axios.get<ApiResponse<Formation[]>>(

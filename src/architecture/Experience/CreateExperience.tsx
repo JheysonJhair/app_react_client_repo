@@ -45,12 +45,11 @@ const CreateExperience = () => {
     isCurrent: "",
   });
 
-
   const [dataLaboralDocente, setDataLaboralDocente] =
     useState<ExperienceLaboralDocente>({
       institution: "",
-      institutionType: 0,
-      teacherType: 0,
+      institutionType: "0",
+      teacherType: "0",
       jobDescription: "",
       startDate: "",
       endDate: "",
@@ -61,8 +60,8 @@ const CreateExperience = () => {
     Record<string, string>
   >({
     institution: "",
-    institutionType: "",
-    teacherType: "",
+    institutionType: "0",
+    teacherType: "0",
     jobDescription: "",
     startDate: "",
     endDate: "",
@@ -231,16 +230,16 @@ const CreateExperience = () => {
           });
           setDataLaboralDocente({
             institution: "",
-            institutionType: 0,
-            teacherType: 0,
+            institutionType: "0",
+            teacherType: "0",
             jobDescription: "",
             startDate: "",
             endDate: "",
           });
           setErrorsLaboralDocente({
             institution: "",
-            institutionType: "",
-            teacherType: "",
+            institutionType: "0",
+            teacherType: "0",
             jobDescription: "",
             startDate: "",
             endDate: "",
@@ -638,30 +637,20 @@ const CreateExperience = () => {
                       name="institutionType"
                       onChange={handleInputChangeLaboralDocente}
                       className={`cursor-pointer 
-                                ${
-                                  errorsLaboralDocente.institutionType
-                                    ? "border-red-500"
-                                    : "border-stroke"
-                                } // Borde normal en modo claro
-                                dark:${
-                                  errorsLaboralDocente.institutionType
-                                    ? "border-red-500"
-                                    : "border-form-strokedark"
-                                } // Borde rojo en modo oscuro
+                             
                                 relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                     >
-                      <option value={0}>Seleccione tipo de institucion</option>
+                      <option
+                        value={0}
+                        className="text-body dark:text-bodydark"
+                      >
+                        Pública
+                      </option>
                       <option
                         value={1}
                         className="text-body dark:text-bodydark"
                       >
-                        institucion 1
-                      </option>
-                      <option
-                        value={2}
-                        className="text-body dark:text-bodydark"
-                      >
-                        institucion 2
+                        Privada
                       </option>
                     </select>
 
@@ -685,11 +674,6 @@ const CreateExperience = () => {
                       </svg>
                     </span>
                   </div>
-                  {errorsLaboralDocente.institution && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboralDocente.institution}
-                    </p>
-                  )}
                 </div>
                 <div className="w-full mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -702,30 +686,26 @@ const CreateExperience = () => {
                       name="teacherType"
                       onChange={handleInputChangeLaboralDocente}
                       className={`cursor-pointer 
-                                ${
-                                  errorsLaboralDocente.teacherType
-                                    ? "border-red-500"
-                                    : "border-stroke"
-                                } // Borde normal en modo claro
-                                dark:${
-                                  errorsLaboralDocente.teacherType
-                                    ? "border-red-500"
-                                    : "border-form-strokedark"
-                                } // Borde rojo en modo oscuro
+                               
                                 relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                     >
-                      <option value={0}>Seleccione tipo de docente</option>
+                      <option
+                        value={0}
+                        className="text-body dark:text-bodydark"
+                      >
+                       Docente Titular
+                      </option>
                       <option
                         value={1}
                         className="text-body dark:text-bodydark"
                       >
-                        Docente 1
+                        Docente Asociado
                       </option>
                       <option
                         value={2}
                         className="text-body dark:text-bodydark"
                       >
-                        Docente 2
+                        Docente Auxiliar
                       </option>
                     </select>
 
@@ -749,11 +729,6 @@ const CreateExperience = () => {
                       </svg>
                     </span>
                   </div>
-                  {errorsLaboralDocente.institution && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorsLaboralDocente.institution}
-                    </p>
-                  )}
                 </div>
                 <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">

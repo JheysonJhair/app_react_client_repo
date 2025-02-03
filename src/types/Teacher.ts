@@ -32,8 +32,8 @@ export interface TeacherDto {
   export interface ExperienceTeacher {
     id?: number;
     institution: string;
-    institutionType: number;
-    teacherType: number;
+    institutionType: number | string;
+    teacherType: number | string;
     jobDescription: string;
     startDate: string;
     endDate: string;

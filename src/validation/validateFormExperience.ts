@@ -68,15 +68,6 @@ export const validateFormLaboralDocente = (data: ExperienceLaboralDocente) => {
     isValid = false;
   }
 
-  if (data.teacherType === 0) {
-    tempErrors.teacherType = "El tipo de docente es requerido.";
-    isValid = false;
-  }
-
-  if (data.institutionType === 0) {
-    tempErrors.institutionType = "El tipo de insitucion es requerido.";
-    isValid = false;
-  }
 
   if (!data.endDate.trim()) {
     tempErrors.endDate = "La fecha de fin es requerida.";

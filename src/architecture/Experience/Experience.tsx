@@ -111,7 +111,7 @@ const Experience = () => {
   //---------------------------------------------------------------- GET ALL
   const fetchTeacher = async () => {
     try {
-      console.log(user.id)
+      console.log(user.id);
       const fetchedTeacher = await getTeacherById(user.id);
       setDocente(fetchedTeacher);
     } catch (error) {
@@ -833,13 +833,25 @@ const Experience = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {teaching.institutionType}
+                        {teaching.institutionType === "0" ||
+                        teaching.institutionType === 0
+                          ? "Pública"
+                          : teaching.institutionType === "1" ||
+                            teaching.institutionType === 1
+                          ? "Privada"
+                          : "Tipo Desconocido"}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {teaching.teacherType}
-                      </p>
+                      {teaching.teacherType == "0" || teaching.teacherType === 0
+                        ? "Docente Titular"
+                        : teaching.teacherType == "1" ||
+                          teaching.teacherType === 1
+                        ? "Docente Asociado"
+                        : teaching.teacherType == "2" ||
+                          teaching.teacherType === 2
+                        ? "Docente Auxiliar"
+                        : "Tipo Desconocido"}
                     </td>
 
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -952,32 +964,20 @@ const Experience = () => {
                         name="institutionType"
                         onChange={handleInputChangeLaboralDocente}
                         className={`cursor-pointer 
-                                ${
-                                  errorsLaboralDocente.institutionType
-                                    ? "border-red-500"
-                                    : "border-stroke"
-                                } // Borde normal en modo claro
-                                dark:${
-                                  errorsLaboralDocente.institutionType
-                                    ? "border-red-500"
-                                    : "border-form-strokedark"
-                                } // Borde rojo en modo oscuro
+              
                                 relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                       >
-                        <option value={0}>
-                          Seleccione tipo de institucion
+                        <option
+                          value={0}
+                          className="text-body dark:text-bodydark"
+                        >
+                          Pública
                         </option>
                         <option
                           value={1}
                           className="text-body dark:text-bodydark"
                         >
-                          institucion 1
-                        </option>
-                        <option
-                          value={2}
-                          className="text-body dark:text-bodydark"
-                        >
-                          institucion 2
+                          Privada
                         </option>
                       </select>
 
@@ -1018,30 +1018,26 @@ const Experience = () => {
                         name="teacherType"
                         onChange={handleInputChangeLaboralDocente}
                         className={`cursor-pointer 
-                                ${
-                                  errorsLaboralDocente.teacherType
-                                    ? "border-red-500"
-                                    : "border-stroke"
-                                } // Borde normal en modo claro
-                                dark:${
-                                  errorsLaboralDocente.teacherType
-                                    ? "border-red-500"
-                                    : "border-form-strokedark"
-                                } // Borde rojo en modo oscuro
+                             
                                 relative z-20 w-full appearance-none rounded border py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:bg-form-input dark:focus:border-primary dark:text-white`}
                       >
-                        <option value={0}>Seleccione tipo de docente</option>
+                        <option
+                          value={0}
+                          className="text-body dark:text-bodydark"
+                        >
+                          Docente Titular
+                        </option>
                         <option
                           value={1}
                           className="text-body dark:text-bodydark"
                         >
-                          Docente 1
+                          Docente Asociado
                         </option>
                         <option
                           value={2}
                           className="text-body dark:text-bodydark"
                         >
-                          Docente 2
+                          Docente Escolar
                         </option>
                       </select>
 

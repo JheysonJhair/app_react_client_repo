@@ -16,7 +16,7 @@ import Loader from "../../common/Loader";
 const Articles = () => {
   const userData = sessionStorage.getItem("userData");
   const user = userData ? JSON.parse(userData) : null;
-  const [isLoading, setIsLoading] = useState<boolean>(true); 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [deleteId, setDeleteId] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -27,29 +27,35 @@ const Articles = () => {
   };
   const [articles, setArticles] = useState<Article[]>([]);
 
+console.log(articles)
+  const [filterStatus, setFilterStatus] = useState<number | null>(null);
+
+  const filteredArticles = filterStatus !== null
+    ? articles.filter((article) => article.estatus === filterStatus)
+    : articles;
+
   //---------------------------------------------------------------- GET ALL
 
-    const fetchArticleTeacher = async () => {
-      if (!user) return;
-  
-      setIsLoading(true);
-  
-      try {
-        const fetchedTeacher = await getScientificArticlesByTeacherId(user.id);
-        console.log(fetchedTeacher);
-        setArticles(fetchedTeacher || []);
-      } catch (error) {
-        console.error("Error al obtener articulos:", error);
-        setArticles([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    useEffect(() => {
-      fetchArticleTeacher();
-    }, [user?.id]);
+  const fetchArticleTeacher = async () => {
+    if (!user) return;
 
+    setIsLoading(true);
+
+    try {
+      const fetchedTeacher = await getScientificArticlesByTeacherId(user.id);
+      console.log(fetchedTeacher);
+      setArticles(fetchedTeacher || []);
+    } catch (error) {
+      console.error("Error al obtener articulos:", error);
+      setArticles([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticleTeacher();
+  }, [user?.id]);
 
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
@@ -61,7 +67,7 @@ const Articles = () => {
     doi: "",
     authors: "",
     pdf: "",
-    editor: "",
+    estatus: 0,
     idNivel: 0,
     idTeacher: user.id,
   });
@@ -129,7 +135,7 @@ const Articles = () => {
             doi: "",
             authors: "",
             pdf: "",
-            editor: "",
+            estatus: 0,
             idNivel: 0,
           });
           setErrors({
@@ -140,7 +146,7 @@ const Articles = () => {
             doi: "",
             authors: "",
             pdf: "",
-            editor: "",
+            estatus: "",
             idNivel: "",
           });
         } else {
@@ -242,7 +248,27 @@ const Articles = () => {
     <>
       <Breadcrumb pageName="Artículos" />
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
+      <div className="flex justify-end space-x-4 mb-4">
+        <button
+          className={`px-4 py-2 rounded ${filterStatus == 1 ? "bg-green-600 text-white" : "bg-gray-300"}`}
+          onClick={() => setFilterStatus(1)}
+        >
+          Publicados
+        </button>
+        <button
+          className={`px-4 py-2 rounded ${filterStatus == 0 ? "bg-yellow-600 text-white" : "bg-gray-300"}`}
+          onClick={() => setFilterStatus(0)}
+        >
+          En Proceso
+        </button>
+        <button
+          className="px-4 py-2 rounded bg-blue-600 text-white"
+          onClick={() => setFilterStatus(null)}
+        >
+          Todos
+        </button>
+      </div>
+       <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -280,65 +306,51 @@ const Articles = () => {
               </tr>
             </thead>
             <tbody>
-              {articles.length > 0 ? (
-                articles.map((article, index) => (
+              {filteredArticles.length > 0 ? (
+                filteredArticles.map((article, index) => (
                   <tr key={index}>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.name.length > 5
-                          ? article.name.slice(0, 5) + "..."
-                          : article.name}
+                        {article.name.length > 5 ? article.name.slice(0, 5) + "..." : article.name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.description.length > 5
-                          ? article.description.slice(0, 5) + "..."
-                          : article.description}
+                        {article.description.length > 5 ? article.description.slice(0, 5) + "..." : article.description}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {article.summary.length > 5
-                          ? article.summary.slice(0, 5) + "..."
-                          : article.summary}
+                        {article.summary.length > 5 ? article.summary.slice(0, 5) + "..." : article.summary}
                       </p>
                     </td>
-
                     <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
                       <p className="text-black dark:text-white">
                         {new Date(article.date).toLocaleDateString("es-ES")}
                       </p>
                     </td>
-
                     <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {article.doi}
-                      </p>
+                      <p className="text-black dark:text-white">{article.doi}</p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-1 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {article.authors}
-                      </p>
+                      <p className="text-black dark:text-white">{article.authors}</p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {article.pdf.length > 5
-                          ? article.pdf.slice(0, 5) + "..."
-                          : article.pdf}
+                        {article.pdf.length > 5 ? article.pdf.slice(0, 5) + "..." : article.pdf}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                          article.estatus === 0 ? "bg-yellow-500 text-yellow-700" : "bg-green-500 text-green-700"
+                        }`}
+                      >
+                        {article.estatus === 0 ? "En Proceso" : "Publicado"}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {article.editor.length > 5
-                          ? article.editor.slice(0, 5) + "..."
-                          : article.editor}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {article.idNivel}
-                      </p>
+                      <p className="text-black dark:text-white">{article.idNivel}</p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
@@ -356,10 +368,7 @@ const Articles = () => {
                             setDeleteId(article.id);
                           }}
                         >
-                          <Trash2
-                            className="text-primary dark:text-white"
-                            size={21}
-                          />
+                          <Trash2 className="text-primary dark:text-white" size={21} />
                         </button>
                       </div>
                     </td>
@@ -367,11 +376,8 @@ const Articles = () => {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan={10}
-                    className="py-5 px-4 text-center text-gray-500 dark:text-gray-400"
-                  >
-                    No hay articulos
+                  <td colSpan={10} className="py-5 px-4 text-center text-gray-500 dark:text-gray-400">
+                    No hay artículos
                   </td>
                 </tr>
               )}
@@ -419,25 +425,62 @@ const Articles = () => {
                     </div>
                     <div className="w-full mb-4.5">
                       <label className="mb-2.5 block text-black dark:text-white">
-                        Editor
+                        Estado
                       </label>
-                      <input
-                        type="text"
-                        name="editor"
-                        placeholder="Ingrese el titulo"
-                        className={`w-full rounded border-[1.5px] ${
-                          errors.editor
-                            ? "border-red-500 dark:border-red-500"
-                            : "border-stroke dark:border-form-strokedark"
-                        } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                        value={data.editor}
-                        onChange={handleInputChange}
-                      />
-                      {errors.editor && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.editor}
-                        </p>
-                      )}
+
+                      <div className="relative z-20 bg-transparent dark:bg-form-input ">
+                        <select
+                          name="estatus"
+                          value={data.estatus}
+                          onChange={(e) => {
+                            setData((prevData) => ({
+                              ...prevData,
+                              estatus: Number(e.target.value),
+                            }));
+                            setIsOptionSelected(true);
+                          }}
+                          className={`cursor-pointer ${
+                            errors.estatus
+                              ? "border-red-500 dark:border-red-500"
+                              : "border-stroke dark:border-form-strokedark"
+                          } relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+                            isOptionSelected ? "text-black dark:text-white" : ""
+                          }`}
+                        >
+                          <option
+                            value={0}
+                            className="text-body dark:text-bodydark"
+                          >
+                            En proceso
+                          </option>
+                          <option
+                            value={1}
+                            className="text-body dark:text-bodydark"
+                          >
+                            Terminado
+                          </option>
+                        </select>
+
+                        <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                          <svg
+                            className="fill-current"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g opacity="0.8">
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                fill=""
+                              ></path>
+                            </g>
+                          </svg>
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="row flex gap-4">
@@ -513,19 +556,19 @@ const Articles = () => {
                             }`}
                           >
                             <option
-                              value={1}
+                              value={0}
                               className="text-body dark:text-bodydark"
                             >
                               Revista
                             </option>
                             <option
-                              value={2}
+                              value={1}
                               className="text-body dark:text-bodydark"
                             >
                               Procides
                             </option>
                             <option
-                              value={3}
+                              value={2}
                               className="text-body dark:text-bodydark"
                             >
                               Patentes

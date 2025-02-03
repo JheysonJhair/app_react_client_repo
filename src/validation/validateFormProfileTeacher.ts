@@ -48,3 +48,4 @@ export const validateForm = (formData: any) => {
 
   return { tempErrors, isValid };
 };
+

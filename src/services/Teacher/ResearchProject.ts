@@ -67,9 +67,9 @@ export const getResearchProjectByTeacherId = async (
 //---------------------------------------------------------------- GET ARTICLE BY TEACHER ID
 export const getProjectGetById= async (
   projectId: string
-): Promise<ProjectFormData> => {
+): Promise<any> => {
   try {
-    const { data } = await axios.get<ApiResponse<ProjectFormData>>(
+    const { data } = await axios.get<ApiResponse<any>>(
       `${import.meta.env.VITE_API_URL}/Research/GetResearchProjectById/${projectId}`
     );
     return data.data;
@@ -80,7 +80,6 @@ export const getProjectGetById= async (
 
 //---------------------------------------------------------------- UPDATE PROJECT
 export const updateResearchProject = async (
-  projectId: string,
   projectData: ProjectFormData
 ): Promise<ApiResponse<ProjectFormData>> => {
   try {
@@ -99,7 +98,7 @@ export const updateResearchProject = async (
     });
 
     const { data } = await axios.put<ApiResponse<ProjectFormData>>(
-      `${import.meta.env.VITE_API_URL}/Research/UpdateResearchProject/${projectId}`,
+      `${import.meta.env.VITE_API_URL}/Research/UpdateResearchProject`,
       formData,
       {
         headers: {

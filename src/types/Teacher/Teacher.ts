@@ -12,7 +12,7 @@ export interface ProfileTeacher {
   registrationCode?: string;
 
   description: string;
-  image: string | File;
+  image: string | File | null;
   password: string;
 
   linkedIn?: string;

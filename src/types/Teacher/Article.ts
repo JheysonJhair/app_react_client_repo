@@ -8,6 +8,6 @@ export interface Article {
   doi: string;
   authors: string;
   pdf:string;
-  editor: string;
+  estatus: number;
   idNivel: number;
 }

@@ -7,6 +7,6 @@ export interface ScientificArticleDto {
   doi: string;
   authors: string;
   pdf: string;
-  editor:String
+  estatus:number
   idNivel: number;
 }

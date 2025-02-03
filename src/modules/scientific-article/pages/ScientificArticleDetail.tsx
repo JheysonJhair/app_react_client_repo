@@ -71,10 +71,6 @@ export const ScientificArticleDetail: React.FC = () => {
                   Sistemas. Universidad de Lima. {article.doi}
                 </p>
               </p>
-              <p className="text-gray-600 mb-4">
-                <span className="font-bold">Editor:</span>
-                <p>{article.editor}</p>
-              </p>
 
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Temas:</span>

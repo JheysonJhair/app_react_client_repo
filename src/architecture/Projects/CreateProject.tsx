@@ -9,14 +9,13 @@ import { createResearchProject } from "../../services/Teacher/ResearchProject";
 const CreateProject = () => {
   const userData = sessionStorage.getItem("userData");
   const user = userData ? JSON.parse(userData) : null;
+
   const [formData, setFormData] = useState<ProjectFormData>({
     title: "",
     authors: "",
     description: "",
     summary: "",
     year: "",
-    doi: "",
-    editor: "",
     file: null,
     idTeacher: user.id,
   });
@@ -27,11 +26,10 @@ const CreateProject = () => {
     description: "",
     summary: "",
     year: "",
-    doi: "",
-    editor: "",
     file: "",
   });
 
+  //---------------------------------------------------------------- CHANGE INPUTS
   const handleFileUpload = (file: File) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -61,6 +59,7 @@ const CreateProject = () => {
     }));
   };
 
+  //---------------------------------------------------------------- POST PROJECT
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -90,8 +89,6 @@ const CreateProject = () => {
             description: "",
             summary: "",
             year: "",
-            doi: "",
-            editor: "",
             file: null,
             idTeacher: user.id,
           });
@@ -101,8 +98,6 @@ const CreateProject = () => {
             description: "",
             summary: "",
             year: "",
-            doi: "",
-            editor: "",
             file: "",
           });
         } else {
@@ -211,30 +206,6 @@ const CreateProject = () => {
                       )}
                     </div>
                   </div>
-                  <div className="w-full mb-4.5">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Doi
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="doi"
-                        placeholder="000000"
-                        className={`form-datepicker w-full rounded border-[1.5px] ${
-                          errors.doi
-                            ? "border-red-500 dark:border-red-500"
-                            : "border-stroke dark:border-form-strokedark"
-                        } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                        value={formData.doi}
-                        onChange={handleInputChange}
-                      />
-                      {errors.doi && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.doi}
-                        </p>
-                      )}
-                    </div>
-                  </div>
                 </div>
                 <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -258,7 +229,6 @@ const CreateProject = () => {
                     </p>
                   )}
                 </div>
-     
               </div>
             </form>
           </div>
@@ -267,27 +237,6 @@ const CreateProject = () => {
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <form onSubmit={handleSubmit}>
               <div className="p-6.5">
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Editor
-                  </label>
-                  <input
-                    type="text"
-                    name="editor"
-                    placeholder="Ingrese el editor"
-                    className={`w-full rounded border-[1.5px] ${
-                      errors.editor
-                        ? "border-red-500 dark:border-red-500"
-                        : "border-stroke dark:border-form-strokedark"
-                    } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                    value={formData.editor}
-                    onChange={handleInputChange}
-                  />
-
-                  {errors.editor && (
-                    <p className="text-red-500 text-sm mt-1">{errors.editor}</p>
-                  )}
-                </div>
                 <div className="mb-6">
                   <label className="mb-2.5 block text-black dark:text-white">
                     Descripción

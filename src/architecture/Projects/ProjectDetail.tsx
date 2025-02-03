@@ -8,12 +8,13 @@ import {
 } from "../../services/Teacher/ResearchProject";
 import Loader from "../../common/Loader";
 import { useNavigate } from "react-router-dom";
-import { validateForm } from "../../validation/validateFormProject";
+import { validateFormUpdate } from "../../validation/validateFormProject";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import Modal from "../../pages/Modal";
 import FileUpload from "./File/FileUpload";
 import ConfirmModal from "../../components/ModalConfirm/ConfirmModal";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
+import { Edit, Trash } from "lucide-react";
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,25 +24,32 @@ export default function ProjectDetail() {
   const [deleteId, setDeleteId] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const [project, setProject] = useState<ProjectFormData | null>(null);
+  const [project, setProject] = useState<any | null>(null);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        if (id) {
-          const data = await getProjectGetById(id);
-          setProject(data);
-          setFormData(data);
-        }
-      } catch (error) {
-        console.error("Error al obtener detalles del proyecto:", error);
+  const fetchProject = async () => {
+    try {
+      if (id) {
+        const data = await getProjectGetById(id);
+        const mappedData = {
+          id: data.id,
+          title: data.name,
+          authors: data.authors,
+          description: data.description,
+          summary: data.summary,
+          year: data.date,
+          file: null,
+        };
+
+        setProject(data);
+        setFormData(mappedData);
       }
-    };
+    } catch (error) {
+      console.error("Error al obtener detalles del proyecto:", error);
+    }
+  };
+  useEffect(() => {
     fetchProject();
   }, [id]);
 
@@ -51,8 +59,6 @@ export default function ProjectDetail() {
     description: "",
     summary: "",
     year: "",
-    doi: "",
-    editor: "",
     file: null,
     idTeacher: user.id,
   });
@@ -63,8 +69,6 @@ export default function ProjectDetail() {
     description: "",
     summary: "",
     year: "",
-    doi: "",
-    editor: "",
     file: "",
   });
 
@@ -88,7 +92,7 @@ export default function ProjectDetail() {
       [name]: value,
     }));
 
-    const { tempErrors } = validateForm({ ...formData, [name]: value });
+    const { tempErrors } = validateFormUpdate({ ...formData, [name]: value });
 
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -98,14 +102,15 @@ export default function ProjectDetail() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { tempErrors, isValid } = validateForm(formData);
+    const { tempErrors, isValid } = validateFormUpdate(formData);
     setErrors(tempErrors);
 
     if (isValid) {
       try {
-        const response = await updateResearchProject("1", formData);
+        console.log(formData);
+        const response = await updateResearchProject(formData);
         if (response.success) {
-          toast.success(response.message, {
+          toast.info(response.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -122,8 +127,6 @@ export default function ProjectDetail() {
             description: "",
             summary: "",
             year: "",
-            doi: "",
-            editor: "",
             file: null,
             idTeacher: user.id,
           });
@@ -133,10 +136,10 @@ export default function ProjectDetail() {
             description: "",
             summary: "",
             year: "",
-            doi: "",
-            editor: "",
             file: "",
           });
+          fetchProject();
+          closeModal();
         } else {
           toast.error(response.message, {
             position: "top-right",
@@ -215,6 +218,10 @@ export default function ProjectDetail() {
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleCancelDelete = () => {
     setShowModal(false);
   };
@@ -228,64 +235,65 @@ export default function ProjectDetail() {
       <Breadcrumb pageName="Detales del proyecto" />
 
       <div className=" py-4 px-6.5 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="flex items-center justify-between border-b">
-          <div className="w-48 h-48 mr-4">
+        <div className="bg-white dark:bg-gray-800  flex flex-col sm:flex-row items-center gap-6  ">
+          <div className="w-80 flex-shrink-0 overflow-hidden rounded-xl">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfJ1D7HGqBUMobz1Nb6UP4ZeDaA5JqNmHlmA&s"
+              src="https://img.innovaciondigital360.com/wp-content/uploads/2023/04/04175800/Que-es-un-sistema-operativo-Agustin-Jamele.jpg"
               alt="Proyecto"
-              className="object-cover w-full h-full rounded-lg"
+              className="w-full h-full object-contain"
             />
           </div>
 
-          <div className="flex-1 py-3">
-            <p className=" text-black dark:text-white-700 mt-4 mb-2">
-              <strong className=" text-black dark:text-white">
-                Descripción:
+          <div className="flex-1 space-y-3">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {project.name}
+            </h2>
+
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-white">
+                Autores:
               </strong>{" "}
-              <span className=" text-black dark:text-gray-400">
-                {project.description}
-              </span>
+              {project.authors}
             </p>
-            <p className=" text-black dark:text-white-700 mb-2">
-              <strong className=" text-black dark:text-white">Resumen:</strong>{" "}
-              <span className=" text-black dark:text-gray-400">
-                {project.summary}
-              </span>
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-white">
+                Enlace al pdf:
+              </strong>{" "}
+              {project.pdf}
             </p>
-            <p className=" text-black dark:text-white-700 mb-2">
-              <strong className=" text-black dark:text-white">DOI:</strong>
-              <span className=" text-black dark:text-gray-400">
-                {project.doi}
-              </span>
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-white">Año:</strong>{" "}
+              {project.date ? project.date.split("T")[0] : ""}
             </p>
-            <p className=" text-black dark:text-white-700 mb-2">
-              <strong className=" text-black dark:text-white">Autores:</strong>{" "}
-              <span className=" text-black dark:text-gray-400">
-                {project.authors}
-              </span>
-            </p>
-            <p className=" text-black dark:text-white-700 mb-2">
-              <strong className=" text-black dark:text-white">Editor:</strong>{" "}
-              <span className=" text-black dark:text-gray-400">
-                {project.editor}
-              </span>
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-white">
+                Resumen:
+              </strong>{" "}
+              {project.summary}
             </p>
 
-            <div className="flex justify-end items-center mt-4">
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong className="text-gray-900 dark:text-white">
+                Descripción:
+              </strong>{" "}
+              {project.description}
+            </p>
+
+            <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-4 hover:bg-blue-600"
+                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-all shadow-md"
               >
-                Editar
+                <Edit className="w-5 h-5" />
               </button>
               <button
                 onClick={() => {
                   setShowModal(true);
                   setDeleteId(id);
                 }}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-all shadow-md"
               >
-                Eliminar
+                <Trash className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -350,9 +358,7 @@ export default function ProjectDetail() {
                         {errors.authors}
                       </p>
                     )}
-                  </div>{" "}
-                </div>
-                <div className="row flex gap-4">
+                  </div>
                   <div className="w-full mb-4.5">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Seleccione el año
@@ -366,7 +372,7 @@ export default function ProjectDetail() {
                             ? "border-red-500 dark:border-red-500"
                             : "border-stroke dark:border-form-strokedark"
                         } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                        value={formData.year}
+                        value={formData.year ? formData.year.split("T")[0] : ""}
                         onChange={handleInputChange}
                       />
                       {errors.year && (
@@ -376,61 +382,15 @@ export default function ProjectDetail() {
                       )}
                     </div>
                   </div>
-                  <div className="w-full mb-4.5">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Doi
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="doi"
-                        placeholder="000000"
-                        className={`form-datepicker w-full rounded border-[1.5px] ${
-                          errors.doi
-                            ? "border-red-500 dark:border-red-500"
-                            : "border-stroke dark:border-form-strokedark"
-                        } bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
-                        value={formData.doi}
-                        onChange={handleInputChange}
-                      />
-                      {errors.doi && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.doi}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-full mb-4.5">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Editor
-                    </label>
-                    <input
-                      type="text"
-                      name="editor"
-                      placeholder="Ingrese el editor"
-                      className={`w-full rounded border-[1.5px] ${
-                        errors.editor
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-stroke dark:border-form-strokedark"
-                      } bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                      value={formData.editor}
-                      onChange={handleInputChange}
-                    />
-
-                    {errors.editor && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.editor}
-                      </p>
-                    )}
-                  </div>
                 </div>
+
                 <div className="row flex gap-4">
                   <div className="w-full mb-6">
                     <label className="mb-2.5 block text-black dark:text-white">
                       Resumen
                     </label>
                     <textarea
-                      rows={4}
+                      rows={2}
                       name="summary"
                       placeholder="Ingrese un pequeño resumen"
                       className={`w-full rounded border-[1.5px] ${
@@ -453,7 +413,7 @@ export default function ProjectDetail() {
                       Descripción
                     </label>
                     <textarea
-                      rows={4}
+                      rows={2}
                       name="description"
                       placeholder="Ingrese una pequeña descripcion"
                       className={`w-full rounded border-[1.5px] ${
@@ -470,28 +430,26 @@ export default function ProjectDetail() {
                       </p>
                     )}
                   </div>
-                  <div className="w-full">
-                    {" "}
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Cambiar documento
-                    </label>
-                    <FileUpload
-                      allowedFormats={["pdf", "docx", "txt"]}
-                      maxSizeMB={12}
-                      onFileUpload={handleFileUpload}
-                      error={errors.file}
-                    />
-                    {errors.file && (
-                      <p className="text-red-500 text-sm mb-3">{errors.file}</p>
-                    )}
-                  </div>
                 </div>
-
+                <div className="w-full">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Cambiar documento
+                  </label>
+                  <FileUpload
+                    allowedFormats={["pdf", "docx", "txt"]}
+                    maxSizeMB={12}
+                    onFileUpload={handleFileUpload}
+                    error={errors.file}
+                  />
+                  {errors.file && (
+                    <p className="text-red-500 text-sm mb-3">{errors.file}</p>
+                  )}
+                </div>
                 <button
                   type="submit"
                   className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
                 >
-                  Crear Proyecto
+                  Editar Proyecto
                 </button>
               </div>
             </form>

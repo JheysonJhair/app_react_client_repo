@@ -15,14 +15,16 @@ export const ScientificArticle = () => {
   const [searchText, setSearchText] = useState<string>("");
   const navigate = useNavigate();
 
-  // ---------------------------------------------------------------- GET ARTICLES
   useEffect(() => {
     const loadArticles = async () => {
       try {
         setLoading(true);
         const fetchedArticles = await getScientificArticles();
-        setArticles(fetchedArticles);
-        setFilteredArticles(fetchedArticles);
+        
+        const filtered = fetchedArticles.filter(article => article.estatus === 1);
+  
+        setArticles(filtered);
+        setFilteredArticles(filtered);
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch articles:", error);
@@ -30,6 +32,7 @@ export const ScientificArticle = () => {
     };
     loadArticles();
   }, []);
+  
 
   // ---------------------------------------------------------------- FILTER ARTICLES LEVEL OR SEARCH
   useEffect(() => {
@@ -147,9 +150,9 @@ export const ScientificArticle = () => {
               <ul className="space-y-2">
                 {[
                   { id: null, name: "Todos" },
-                  { id: 1, name: "Revistas" },
-                  { id: 2, name: "Procidis" },
-                  { id: 3, name: "Patentes" },
+                  { id: 0, name: "Revistas" },
+                  { id: 1, name: "Procidis" },
+                  { id: 2, name: "Patentes" },
                 ].map((level) => (
                   <li
                     key={level.id}

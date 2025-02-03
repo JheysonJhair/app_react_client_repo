@@ -33,7 +33,7 @@ const TeacherProfile = () => {
     registrationCode: "",
 
     description: "",
-    image: "",
+    image: null,
     password: "",
 
     linkedIn: "",
@@ -75,26 +75,31 @@ const TeacherProfile = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
 
-    if (name === "image" && (e.target as HTMLInputElement).files) {
+    if (type === "file" && (e.target as HTMLInputElement).files) {
       const file = (e.target as HTMLInputElement).files![0];
+
       setData((prevData) => ({
         ...prevData,
-        image: file,
+        image: file, 
       }));
-    } else {
-      setData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+
+      return; 
     }
 
-    const { tempErrors } = validateForm({ ...data, [name]: value });
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: tempErrors[name],
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
     }));
+
+    setErrors((prevErrors) => {
+      const newErrors = validateForm({ ...data, [name]: value }).tempErrors;
+      return {
+        ...prevErrors,
+        [name]: newErrors[name] || "",
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,7 +146,15 @@ const TeacherProfile = () => {
             theme: "light",
             transition: Bounce,
           });
-
+          try {
+            const fetchedTeacher = await getTeacherById(user.id);
+            setDocente(fetchedTeacher);
+            sessionStorage.setItem("userData", JSON.stringify(fetchedTeacher));
+            setData(user);
+          } catch (error) {
+            console.error("Error al obtener el docente:", error);
+          }
+         
           setData({
             id: user.id,
             firstName: "",
@@ -154,7 +167,7 @@ const TeacherProfile = () => {
             concytec: "",
             registrationCode: "",
             description: "",
-            image: "",
+            image: null,
             password: "",
             linkedIn: "",
             facebook: "",
@@ -184,6 +197,8 @@ const TeacherProfile = () => {
             phone: "",
             birthDate: "",
           });
+          window.location.reload();
+
         } else {
           toast.error(response.message, {
             position: "top-right",
@@ -629,7 +644,7 @@ const TeacherProfile = () => {
                       ) : (
                         <div className="w-full h-18 flex justify-center items-center bg-gray-100 dark:bg-gray-700 rounded">
                           <span className="text-gray-500 dark:text-gray-300">
-                            Sin imagen seleccionada
+                            Imagen cargado!!
                           </span>
                         </div>
                       )}
@@ -646,8 +661,10 @@ const TeacherProfile = () => {
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          const imageUrl = URL.createObjectURL(file);
-                          setData({ ...data, image: imageUrl });
+                          setData((prevData) => ({
+                            ...prevData,
+                            image: file,
+                          }));
                         }
                       }}
                     />

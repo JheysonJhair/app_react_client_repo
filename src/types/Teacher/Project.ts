@@ -5,8 +5,6 @@ export interface ProjectFormData {
   description: string;
   summary: string;
   year: string;
-  doi: string;
-  editor: string;
   file: File | null;
   idTeacher?: string;
 }
@@ -17,8 +15,6 @@ export interface ProjectGetAll {
   description: string;
   summary: string;
   date: string;
-  doi: string;
   authors: string;
-  pdf: string;
-  editor: string;
+  pdf: string | File;
 }

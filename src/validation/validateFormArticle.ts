@@ -34,7 +34,8 @@ export const validateForm = (data: Article) => {
     tempErrors.description = "La descripción es requerida.";
     isValid = false;
   } else if (data.description.length < 10) {
-    tempErrors.description = "La descripción debe tener al menos 10 caracteres.";
+    tempErrors.description =
+      "La descripción debe tener al menos 10 caracteres.";
     isValid = false;
   }
 
@@ -50,12 +51,6 @@ export const validateForm = (data: Article) => {
     tempErrors.authors = "Los autores son requeridos.";
     isValid = false;
   }
-
-  if (!data.editor.trim()) {
-    tempErrors.editor = "El editor es requerido.";
-    isValid = false;
-  }
-
 
   return { tempErrors, isValid };
 };

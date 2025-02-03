@@ -4,7 +4,6 @@ import { Hero } from "./components/Hero";
 import { TeacherDto } from "../types/Teacher";
 import { getTeachers } from "../services/Student/Teacher";
 
-
 export const HomeStudent = () => {
   const [docentes, setDocentes] = useState<TeacherDto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -56,16 +55,17 @@ export const HomeStudent = () => {
                   onClick={() => handleCardClick(docente)}
                 >
                   <img
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-contain"
                     src={docente.image}
                     alt={docente.firstName}
                   />
+
                   <div className="p-4 flex flex-col justify-between">
                     <h4 className="text-lg font-bold text-ellipsis overflow-hidden whitespace-nowrap">
                       {docente.firstName} {docente.lastName}
                     </h4>
                     <p className="text-xl font-semibold text-gray-800">
-                      {docente.position}
+                      Ingeniería en informática y sistemas
                     </p>
                   </div>
                 </div>

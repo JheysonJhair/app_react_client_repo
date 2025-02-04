@@ -58,7 +58,7 @@ export const ResearchProjectDetail: React.FC = () => {
                 <span className="font-bold">Cómo citar:</span>
                 <p>
                   Observatorio Tecnológico. ({new Date().getFullYear()},
-                  diciembre). Boletín del Observatorio Tecnológico, año{" "}
+                  enero). Boletín del Observatorio Tecnológico, año{" "}
                   {new Date().getFullYear() - 2022} (4). Carrera de Ingeniería
                   Informática y de Sistemas. Universidad Nacional Micaela
                   Bastidas de Apurímac.

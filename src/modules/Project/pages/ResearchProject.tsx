@@ -5,18 +5,26 @@ import { ResearchProjectDto } from "../../../types/ResearchProject";
 import { getResearchProjects } from "../../../services/Student/ResearchProject";
 import { formatDate } from "../../../utils/util";
 export const ResearchProject = () => {
-
   const [project, setProject] = useState<ResearchProjectDto[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
+  const [searchText, setSearchText] = useState<string>("");
+
+  const [filteredProject, setFilteredProject] = useState<ResearchProjectDto[]>(
+    []
+  );
   //---------------------------------------------------------------- GET TEACHERS
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
         const projects = await getResearchProjects();
-        setProject(projects);
+        if (projects == null) {
+          setProject([]);
+        } else {
+          setProject(projects);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch projects:", error);
@@ -31,6 +39,17 @@ export const ResearchProject = () => {
     });
   };
 
+  // ---------------------------------------------------------------- FILTER ARTICLES LEVEL OR SEARCH
+  useEffect(() => {
+    const filtered = project.filter((article) => {
+      const matchesSearch = article.name
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+      return matchesSearch;
+    });
+    setFilteredProject(filtered);
+  }, [searchText, project]);
+
   return (
     <section className="mt-[120px] sm:mt-10 max-w-[1350px] mx-auto py-16">
       <div className="container mx-auto">
@@ -44,17 +63,22 @@ export const ResearchProject = () => {
             </div>
 
             <div className="mt-6 w-full flex items-center gap-2">
-              <div className=" w-full flex items-center border border-gray-300 rounded-lg px-4 py-2 focus-within:ring-2 focus-within:ring-primary_light">
+              <div className="w-full flex items-center border border-gray-300 rounded-lg px-4 py-2 focus-within:ring-2 focus-within:ring-primary_light">
                 <AiOutlineSearch size={20} className="text-gray-400 mr-2" />
                 <input
                   type="text"
-                  placeholder="Buscar artículos..."
+                  placeholder="Buscar proyectos..."
                   className="flex-grow text-lg focus:outline-none"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
                 />
               </div>
 
-              <button className="bg-secondary_light hover:bg-primary text-white font-bold px-6 py-3 rounded-md">
-                Buscar
+              <button
+                className="bg-secondary_light hover:bg-primary text-white font-bold px-6 py-3 rounded-md"
+                onClick={() => setSearchText("")}
+              >
+                Limpiar
               </button>
             </div>
           </div>
@@ -64,42 +88,51 @@ export const ResearchProject = () => {
               <div className="w-3/4 text-center">Cargando proyectos...</div>
             ) : (
               <section className="w-3/4">
-                {project.map((project) => (
-                  <article
-                    key={project.id}
-                    className="bg-white shadow-md rounded-lg p-4 mb-4"
-                  >
-                    <a
-                      className="text-blue-600 text-lg font-bold hover:underline cursor-pointer"
-                      onClick={() => handleCardClick(project)}
+                {filteredProject.length > 0 ? (
+                  project.map((project) => (
+                    <article
+                      key={project.id}
+                      className="bg-white shadow-md rounded-lg p-4 mb-4"
                     >
-                      {project.name}
-                    </a>
-                    <p className="text-gray-400 text-sm"> Año {formatDate(project.date)}</p>
-                    <p className="text-gray-900 text-sm">
-                      <p>
-                        Autores:{" "}
-                        <span className="text-secondary_light">
-                          {project.authors}
-                        </span>
+                      <a
+                        className="text-blue-600 text-lg font-bold hover:underline cursor-pointer"
+                        onClick={() => handleCardClick(project)}
+                      >
+                        {project.name}
+                      </a>
+                      <p className="text-gray-400 text-sm">
+                        {" "}
+                        Año {formatDate(project.date)}
                       </p>
-                    </p>
-                    <p className="text-gray-700 mt-2">{project.description}</p>
-                    <a
-                      href={project.pdf}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-auto max-w-24 flex items-center mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600"
-                    >
-                      <AiFillFilePdf size={20} className="mr-2" /> PDF
-                    </a>
-                  </article>
-                ))}
+                      <p className="text-gray-900 text-sm">
+                        <p>
+                          Autores:{" "}
+                          <span className="text-secondary_light">
+                            {project.authors}
+                          </span>
+                        </p>
+                      </p>
+                      <p className="text-gray-700 mt-2">
+                        {project.description}
+                      </p>
+                      <a
+                        href={project.pdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-auto max-w-24 flex items-center mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600"
+                      >
+                        <AiFillFilePdf size={20} className="mr-2" /> PDF
+                      </a>
+                    </article>
+                  ))
+                ) : (
+                  <div className="text-gray-500 text-center">
+                    No se encontraron proyectos.
+                  </div>
+                )}
               </section>
             )}
-            <aside className="w-1/4 h-[250px] p-4 rounded-lg ml-4">
- 
-            </aside>
+            <aside className="w-1/4 h-[250px] p-4 rounded-lg ml-4"></aside>
           </div>
         </div>
       </div>

@@ -133,7 +133,6 @@ const TeacherProfile = () => {
       };
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { tempErrors, isValid } = validateForm(data);
@@ -141,6 +140,7 @@ const TeacherProfile = () => {
     if (isValid) {
       try {
         console.log("asdasda");
+
         const formData = new FormData();
         formData.append("Id", user.id || "");
         formData.append("FirstName", data.firstName || "");
@@ -159,12 +159,12 @@ const TeacherProfile = () => {
         formData.append("Password", data.password || "");
         formData.append("LinkedIn", data.linkedIn || "");
         formData.append("Facebook", data.facebook || "");
-        formData.append("Gender", data.gender ? data.gender.toString() : "");
+        formData.append("Gender", data.gender ? "False" : "True");
+
         formData.append("Position", data.position || "");
         formData.append("Phone", data.phone || "");
         formData.append("BirthDate", data.birthDate || "");
 
-        console.log(formData);
         const response = await updateTeacher(formData);
         if (response.success) {
           toast.info(response.message, {
@@ -244,7 +244,6 @@ const TeacherProfile = () => {
           });
         }
       } catch (error) {
-        console.error("Detalles del error:", error);
         toast.error("Oops, algo salió mal!", {
           position: "top-right",
           autoClose: 5000,
@@ -656,16 +655,16 @@ const TeacherProfile = () => {
                     </label>
                     <select
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                      value={docente.gender ? "Masculino" : "Femenino"}
+                      value={docente.gender ? "true" : "false"}
                       onChange={(e) =>
                         setDocente((prev) => ({
                           ...prev!,
-                          gender: e.target.value === "Masculino",
+                          gender: e.target.value === "true",
                         }))
                       }
                     >
-                      <option value="Masculino">Masculino</option>
-                      <option value="Femenino">Femenino</option>
+                      <option value="true">Masculino</option>
+                      <option value="false">Femenino</option>
                     </select>
                   </div>
                 </div>

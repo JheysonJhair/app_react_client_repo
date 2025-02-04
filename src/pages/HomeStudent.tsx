@@ -16,7 +16,14 @@ export const HomeStudent = () => {
         setLoading(true);
         const products = await getTeachers();
         console.log(products);
-        setDocentes(products);
+
+        if (products == null) {
+          setDocentes([]);
+        } else {
+          setDocentes(products);
+        }
+
+        
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch products:", error);

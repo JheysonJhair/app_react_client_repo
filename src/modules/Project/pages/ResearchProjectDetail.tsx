@@ -18,8 +18,7 @@ export const ResearchProjectDetail: React.FC = () => {
   return (
     <section className="mt-[130px] sm:mt-12 max-w-[1000px] mx-auto py-16">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Efectos de la ceniza de cascara de arroz sobre las propiedades mecánicas
-        y durabilidad de un concreto convencional, Lambayeque-2024
+      {project.name}
       </h1>
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-6">
@@ -56,15 +55,6 @@ export const ResearchProjectDetail: React.FC = () => {
               {project.summary}
             </p>
             <div className="space-y-4 text-sm">
-              <p className="text-gray-600 mb-4">
-                <p className="font-bold">URI:</p>
-                <a
-                  href={project.doi}
-                  className="text-secondary_light underline"
-                >
-                  {project.doi}
-                </a>
-              </p>
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Cómo citar:</span>
                 <p>

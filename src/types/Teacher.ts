@@ -9,6 +9,7 @@ export interface TeacherDto {
     linkedIn?:string;
     registrationCode:string;
     mail?: string;
+    concytec?:string;
     phone?: string;
     description: string;
     birthDate?: string;

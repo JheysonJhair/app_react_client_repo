@@ -184,7 +184,7 @@ const CreateArticle = () => {
                       Doi
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="doi"
                       placeholder="DOI"
                       className={`w-full rounded border-[1.5px] ${

@@ -55,13 +55,12 @@ export const ScientificArticleDetail: React.FC = () => {
             </p>
             <div className="space-y-4 text-sm">
               <p className="text-gray-600 mb-4">
-                <p className="font-bold">URI:</p>
-                <a
-                  href={article.doi}
-                  className="text-secondary_light underline"
+                <p className="font-bold">DOI:</p>
+                <p
+               
                 >
                   {article.doi}
-                </a>
+                </p>
               </p>
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Cómo citar:</span>

@@ -35,6 +35,7 @@ const CreateProject = () => {
       ...prevData,
       file: file,
     }));
+
     setErrors((prevErrors) => ({
       ...prevErrors,
       file: "",
@@ -265,6 +266,7 @@ const CreateProject = () => {
                   onFileUpload={handleFileUpload}
                   error={errors.file}
                 />
+
                 {errors.file && (
                   <p className="text-red-500 text-sm mb-3">{errors.file}</p>
                 )}

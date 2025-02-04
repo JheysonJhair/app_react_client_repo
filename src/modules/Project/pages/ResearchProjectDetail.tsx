@@ -107,7 +107,7 @@ export const ResearchProjectDetail: React.FC = () => {
               </p>
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Colección(es):</span>
-                <p> Boletín del Observatorio Tecnológico ULima [8]</p>
+                <p> Boletín del Observatorio Tecnológico - UNAMBA [8]</p>
               </p>
             </div>
           </div>

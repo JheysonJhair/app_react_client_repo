@@ -65,9 +65,11 @@ export const ScientificArticleDetail: React.FC = () => {
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Cómo citar:</span>
                 <p>
-                  Observatorio Tecnológico. (2024, diciembre). Boletín del
-                  Observatorio Tecnológico, año 2 (4). Carrera de Ingeniería de
-                  Sistemas. Universidad de Lima. {article.doi}
+                  Observatorio Tecnológico. ({new Date().getFullYear()},
+                  diciembre). Boletín del Observatorio Tecnológico, año{" "}
+                  {new Date().getFullYear() - 2022} (4). Carrera de Ingeniería
+                  Informática y de Sistemas. Universidad Nacional Micaela
+                  Bastidas de Apurímac.
                 </p>
               </p>
 
@@ -113,7 +115,7 @@ export const ScientificArticleDetail: React.FC = () => {
               </p>
               <p className="text-gray-600 mb-4">
                 <span className="font-bold">Colección(es):</span>
-                <p> Boletín del Observatorio Tecnológico ULima [8]</p>
+                <p> Boletín del Observatorio Tecnológico - UNAMBA [8]</p>
               </p>
             </div>
           </div>
